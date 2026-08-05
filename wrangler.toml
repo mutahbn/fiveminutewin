@@ -1,0 +1,29 @@
+# The Five-Minute Win — Cloudflare Workers config
+name = "fiveminutewin"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[ai]
+binding = "AI"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fmw"
+database_id = "REPLACE_AFTER_CREATE"   # set after: wrangler d1 create fmw
+
+[vars]
+FREE_GEN_CAP = "10"
+SITE_NAME = "The Five-Minute Win"
+WORKERS_AI_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
+
+# Secrets (set via `wrangler secret put NAME`, never committed):
+#   ANTHROPIC_API_KEY  — LLM for in-page generation
+#   RESEND_API_KEY     — email (magic links + daily mission)
+#   VISITOR_SALT       — for hashing visitor keys (privacy)
+
+# Custom domain is attached after first deploy:
+#   fiveminutewin.com (+ www), with 5minutewin.com / thefiveminutewin.com as redirect rules

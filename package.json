@@ -1,0 +1,19 @@
+{
+  "name": "fiveminutewin",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Five-Minute Win — one real-life win with AI, every day. fiveminutewin.com",
+  "scripts": {
+    "seed": "node scripts/build-seed.mjs",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute fmw --local --file=db/schema.sql && wrangler d1 execute fmw --local --file=db/seed.sql",
+    "db:remote": "wrangler d1 execute fmw --remote --file=db/schema.sql && wrangler d1 execute fmw --remote --file=db/seed.sql"
+  },
+  "dependencies": {
+    "hono": "^4"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

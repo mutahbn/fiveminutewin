@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Five-Minute Win — Prototype v2</title>
+<style>
+  :root{
+    --cream:#FAF5EC; --paper:#FFFDF8; --ink:#221C14; --ink-soft:#5C5347;
+    --coral:#E8593F; --coral-dark:#C74128; --amber:#F2A33C;
+    --green:#3E7C4F; --green-soft:#E4F0E6; --red-soft:#FBE3DC;
+    --line:#E7DECF; --shadow:0 2px 0 rgba(34,28,20,.08); --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .display{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;letter-spacing:-.01em;}
+
+  header{position:sticky;top:0;z-index:50;background:rgba(250,245,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .bar{max-width:1040px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:18px;}
+  .logo{display:flex;align-items:baseline;gap:8px;cursor:pointer;}
+  .logo .mark{width:30px;height:30px;border-radius:9px;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;transform:translateY(6px);}
+  .logo .name{font-weight:800;font-size:19px;}
+  .logo .dom{font-size:12px;color:var(--ink-soft);}
+  nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;}
+  nav button{border:0;background:transparent;font:inherit;font-weight:600;font-size:14px;color:var(--ink-soft);padding:8px 12px;border-radius:10px;cursor:pointer;}
+  nav button:hover{background:#F0E8D9;color:var(--ink);}
+  nav button.active{background:var(--ink);color:var(--cream);}
+  .streak{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;background:#FDEBD2;border:1px solid #F4D6A6;padding:7px 12px;border-radius:999px;white-space:nowrap;}
+
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px 90px;}
+  .screen{display:none;animation:fade .35s ease;}
+  .screen.on{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+  .hero{padding:66px 0 26px;max-width:760px;}
+  .kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-dark);background:#FBE3DC;padding:6px 12px;border-radius:999px;margin-bottom:22px;}
+  h1{font-size:clamp(38px,6vw,62px);line-height:1.06;font-weight:700;}
+  h1 em{font-style:normal;color:var(--coral);}
+  .sub{font-size:20px;color:var(--ink-soft);margin:22px 0 28px;max-width:560px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;background:var(--coral);color:#fff;font:inherit;font-weight:700;font-size:17px;padding:15px 26px;border-radius:14px;box-shadow:0 3px 0 var(--coral-dark);transition:transform .08s ease;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(1px);box-shadow:none;}
+  .btn.ghost{background:transparent;color:var(--ink);box-shadow:none;border:2px solid var(--ink);}
+  .btn.small{font-size:14px;padding:10px 16px;border-radius:11px;}
+  .btn.green{background:var(--green);box-shadow:0 3px 0 #2C5C3A;}
+  .livechip{display:inline-flex;align-items:center;gap:8px;margin-top:26px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;color:var(--ink-soft);}
+  .livechip .dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
+
+  .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:52px 0 10px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+  .card .num{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--cream);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:14px;}
+  .card h3{font-size:18px;margin-bottom:6px;}
+  .card p{font-size:14.5px;color:var(--ink-soft);}
+  .strip{margin-top:52px;background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:34px;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;}
+  .strip h3{font-size:22px;max-width:460px;line-height:1.3;}
+  .quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:52px;}
+  .q{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);}
+  .q p{font-size:15px;}
+  .q .who{margin-top:12px;font-size:13px;font-weight:700;color:var(--coral-dark);}
+
+  .day-head{padding:46px 0 6px;display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+  .day-tag{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+  h2{font-size:clamp(26px,4.2vw,40px);line-height:1.12;margin-top:6px;}
+  .skill-line{margin-top:10px;font-size:14.5px;font-weight:600;color:var(--coral-dark);background:#FBE3DC;display:inline-block;padding:6px 14px;border-radius:999px;}
+
+  .daychips{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 6px;}
+  .daychip{border:2px solid var(--line);background:var(--paper);font:inherit;font-size:13.5px;font-weight:700;padding:8px 14px;border-radius:12px;cursor:pointer;color:var(--ink-soft);}
+  .daychip.sel{border-color:var(--coral);background:var(--coral);color:#fff;}
+  .daychips-note{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;}
+
+  .personas{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 6px;}
+  .persona{border:2px solid var(--line);background:var(--paper);font:inherit;font-size:14px;font-weight:600;padding:9px 15px;border-radius:999px;cursor:pointer;color:var(--ink-soft);}
+  .persona.sel{border-color:var(--ink);background:var(--ink);color:var(--cream);}
+  .persona-note{font-size:13.5px;font-weight:600;margin-bottom:20px;}
+  .persona-note b{color:var(--coral-dark);}
+
+  .mission-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;}
+  @media(max-width:820px){.mission-grid{grid-template-columns:1fr;}}
+  .story{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);}
+  .story h3{font-size:20px;margin-bottom:10px;}
+  .story p{color:var(--ink-soft);font-size:15.5px;margin-bottom:12px;}
+  .steps{margin-top:16px;}
+  .step{display:flex;gap:12px;padding:10px 0;border-top:1px dashed var(--line);font-size:14.5px;}
+  .step b{color:var(--coral-dark);white-space:nowrap;}
+
+  .promptbox{background:#26201A;color:#F5EEDF;border-radius:var(--radius);padding:22px;position:relative;}
+  .promptbox .label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
+  .promptbox pre{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#F5EEDF;}
+  .copybtn{position:absolute;top:16px;right:16px;border:1px solid #4A4030;background:transparent;color:#D8CDB8;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;}
+  .copybtn:hover{background:#3A3226;}
+  .why{margin-top:14px;background:#FDF3E3;border:1px solid #F4D6A6;border-radius:14px;padding:15px 17px;font-size:14px;}
+  .why b{color:var(--coral-dark);}
+
+  .tryit{margin-top:14px;background:var(--paper);border:2px solid var(--coral);border-radius:var(--radius);padding:20px;}
+  .tryit .t-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .tryit h4{font-size:16px;}
+  .tryit .t-note{font-size:11.5px;color:var(--ink-soft);}
+  .genout{display:none;margin-top:14px;background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14px;line-height:1.6;white-space:pre-wrap;}
+  .genout.show{display:block;animation:fade .35s;}
+  .refines{display:none;margin-top:12px;gap:8px;flex-wrap:wrap;align-items:center;}
+  .refines.show{display:flex;}
+  .refines span{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+  .refinebtn{border:1.5px solid var(--ink);background:transparent;font:inherit;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer;}
+  .refinebtn:hover{background:var(--ink);color:var(--cream);}
+  .capnote{margin-top:10px;font-size:12px;color:var(--ink-soft);}
+
+  .doneRow{margin-top:26px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .winbanner{display:none;margin-top:22px;background:var(--green-soft);border:2px solid var(--green);border-radius:var(--radius);padding:22px 24px;}
+  .winbanner.show{display:block;animation:fade .4s ease;}
+  .winbanner h3{color:var(--green);font-size:19px;margin-bottom:6px;}
+  .winbanner p{font-size:14.5px;color:var(--ink-soft);}
+  .reflect{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+  .reflect input{flex:1;min-width:230px;font:inherit;font-size:14px;padding:11px 14px;border:1.5px solid var(--line);border-radius:11px;background:var(--paper);}
+  .reflect input:focus{outline:2px solid var(--green);border-color:transparent;}
+  .saved-reflection{display:none;margin-top:12px;font-size:14px;background:var(--paper);border:1px dashed var(--green);border-radius:11px;padding:12px 14px;}
+  .saved-reflection.show{display:block;}
+
+  .duel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
+  @media(max-width:720px){.duel{grid-template-columns:1fr;}}
+  .duel-card{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);padding:24px;cursor:pointer;transition:border-color .15s, transform .08s;}
+  .duel-card:hover{border-color:var(--ink);transform:translateY(-2px);}
+  .duel-card.win{border-color:var(--green);background:var(--green-soft);}
+  .duel-card.lose{border-color:#D8B9B2;opacity:.7;}
+  .duel-card .tag{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;}
+  .duel-card pre{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;}
+  .resmark{position:absolute;top:-14px;right:16px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;}
+  .resmark.good{background:var(--green);}
+  .resmark.bad{background:var(--coral-dark);}
+  .verdict{display:none;margin-top:18px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);}
+  .verdict.show{display:block;animation:fade .35s;}
+  .verdict h3{font-size:18px;margin-bottom:8px;}
+  .verdict p{font-size:15px;color:var(--ink-soft);}
+  .scorebar{margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .pill{background:#FDEBD2;border:1px solid #F4D6A6;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;}
+  .sharecard{display:none;margin-top:16px;background:#26201A;color:#F5EEDF;border-radius:14px;padding:18px;font-family:ui-monospace,Menlo,monospace;font-size:14px;white-space:pre-wrap;position:relative;}
+  .sharecard.show{display:block;}
+
+  .memb-hero{padding:50px 0 6px;max-width:720px;}
+  .tiers{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px;}
+  @media(max-width:760px){.tiers{grid-template-columns:1fr;}}
+  .tier{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);}
+  .tier.pro{border:2px solid var(--coral);position:relative;}
+  .tier .price{font-size:34px;font-weight:800;margin:8px 0 2px;}
+  .tier .per{font-size:13px;color:var(--ink-soft);margin-bottom:18px;}
+  .tier ul{list-style:none;}
+  .tier li{padding:9px 0;border-top:1px dashed var(--line);font-size:14.5px;display:flex;gap:10px;}
+  .tier li::before{content:"✓";color:var(--green);font-weight:800;}
+  .badge-top{position:absolute;top:-13px;left:26px;background:var(--coral);color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:999px;letter-spacing:.05em;}
+  .proofgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:26px;}
+  .proof{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;font-size:13.5px;box-shadow:var(--shadow);}
+  .proof b{display:block;margin-bottom:5px;font-size:13px;}
+  .proof span{color:var(--ink-soft);}
+  .portfolio{margin-top:40px;background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:34px;}
+  .portfolio h3{font-size:22px;margin-bottom:6px;}
+  .portfolio .p-sub{font-size:14px;color:#C9BFA9;margin-bottom:18px;}
+  .wins{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
+  .win-item{background:#332B21;border-radius:14px;padding:16px;font-size:13.5px;line-height:1.5;}
+  .win-item b{color:var(--amber);display:block;margin-bottom:4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+  .win-item.live{outline:2px dashed var(--amber);}
+
+  footer{border-top:1px solid var(--line);margin-top:70px;padding:26px 22px;text-align:center;font-size:13px;color:var(--ink-soft);}
+
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--cream);padding:13px 22px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;transition:all .3s ease;z-index:99;max-width:88vw;text-align:center;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .overlay{position:fixed;inset:0;background:rgba(34,28,20,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .overlay.hide{display:none;}
+  .modal{background:var(--cream);border-radius:22px;padding:36px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:fade .4s;}
+  .modal h2{font-size:26px;margin-bottom:8px;}
+  .modal p{font-size:15px;color:var(--ink-soft);margin-bottom:20px;}
+  .modal .plist{display:flex;flex-direction:column;gap:8px;}
+  .modal .plist button{text-align:left;font:inherit;font-size:15.5px;font-weight:600;background:var(--paper);border:2px solid var(--line);border-radius:13px;padding:13px 17px;cursor:pointer;}
+  .modal .plist button:hover{border-color:var(--coral);}
+  .modal .skip{margin-top:14px;background:none;border:none;font:inherit;font-size:13.5px;color:var(--ink-soft);text-decoration:underline;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<!-- ============ ONBOARDING ============ -->
+<div class="overlay" id="onboard">
+  <div class="modal">
+    <span class="kicker">Welcome · 10 seconds, one question</span>
+    <h2 class="display">Which sounds most like you?</h2>
+    <p>Every daily mission rewrites itself for your life — your examples, your situations, your words. You can switch anytime.</p>
+    <div class="plist" id="onboardList"></div>
+    <button class="skip" onclick="closeOnboard(null)">I'm just exploring — show me everything</button>
+  </div>
+</div>
+
+<header>
+  <div class="bar">
+    <div class="logo" onclick="go('home')">
+      <span class="mark">5</span>
+      <span>
+        <span class="name display">The Five-Minute Win</span><br>
+        <span class="dom">fiveminutewin.com</span>
+      </span>
+    </div>
+    <nav>
+      <button id="nav-home" class="active" onclick="go('home')">Home</button>
+      <button id="nav-mission" onclick="go('mission')">Today's Mission</button>
+      <button id="nav-challenge" onclick="go('challenge')">The Challenge</button>
+      <button id="nav-member" onclick="go('member')">Membership</button>
+    </nav>
+    <div class="streak">🔥 <span id="streakCount">6</span>-day streak</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ HOME ============ -->
+  <section id="home" class="screen on">
+    <div class="hero">
+      <span class="kicker">No jargon. No lectures. No experience needed.</span>
+      <h1 class="display">One real-life <em>win</em> with AI.<br>Five minutes here. A win out there.</h1>
+      <p class="sub">Most sites teach you <b>about</b> AI. Here, five minutes gets you <b>armed</b> — the exact email, the phone script, the week's plan, ready in your hand. Then you make your move in real life. That's the win, and it's yours.</p>
+      <button class="btn" onclick="go('mission')">Start today's mission →</button>
+      <button class="btn ghost" style="margin-left:10px" onclick="go('challenge')">Play today's challenge</button>
+      <div><span class="livechip"><span class="dot"></span> 1,284 people logged today's win <span style="font-weight:400">(illustrative)</span></span></div>
+    </div>
+
+    <div class="how">
+      <div class="card">
+        <div class="num">1</div>
+        <h3 class="display">Get today's mission</h3>
+        <p>A tiny, real-life task — written for <i>your</i> life. Pick who you are once (parent, shop owner, office worker, job-seeker, retiree) and every example fits you from then on.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h3 class="display">Five minutes: get armed</h3>
+        <p>We hand you the exact words — and you can generate your draft <i>on this page</i>, then refine it with one tap. Our promise: this part never takes more than five minutes. You leave holding the result.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3 class="display">Make your move, log the win</h3>
+        <p>Send it. Make the call. Cook the plan. That part happens in your life, on your clock — and when it's done, log the win, keep your streak, and play the 30-second challenge to lock the skill in.</p>
+      </div>
+    </div>
+
+    <div class="strip">
+      <h3 class="display">"I don't need to understand AI. I need it to write my landlord a firm-but-polite email by 6pm."</h3>
+      <button class="btn small" onclick="go('mission')">That's exactly what we do →</button>
+    </div>
+
+    <div class="quotes">
+      <div class="q"><p>"Day 4 was the bill-negotiation script. I called my internet company and saved $18/month. This site has literally paid me."</p><div class="who">— Marisol, 58, café owner</div></div>
+      <div class="q"><p>"I've 'learned AI' three times from YouTube and remembered nothing. Here I just… use it. My streak is 41 days."</p><div class="who">— David, 34, dad of two</div></div>
+      <div class="q"><p>"The challenge game is evil. I refuse to lose my streak. My daughter and I compare scores at dinner."</p><div class="who">— Ana, 61, retired teacher</div></div>
+    </div>
+  </section>
+
+  <!-- ============ MISSION ============ -->
+  <section id="mission" class="screen">
+    <div class="day-head">
+      <div>
+        <div class="day-tag" id="mTag"></div>
+        <h2 class="display" id="mTitle"></h2>
+        <div class="skill-line" id="mSkill"></div>
+      </div>
+      <div class="pill">⏱ 5 minutes here · then your move</div>
+    </div>
+
+    <div class="daychips" id="dayChips"></div>
+    <div class="daychips-note">Reviewer note: the day switcher exists in this prototype to prove mission variety across life domains — Money, Words, Time. The real site shows one mission per day.</div>
+
+    <div class="personas" id="personaRow"></div>
+    <p class="persona-note">Showing examples for: <b id="personaLabel"></b> — switch anytime, the whole mission rewrites itself.</p>
+
+    <div class="mission-grid">
+      <div class="story">
+        <h3 class="display" id="storyTitle"></h3>
+        <p id="storyBody"></p>
+        <div class="steps">
+          <div class="step"><b>Step 1</b><span>Read the prompt on the right and fill the [brackets] with your real situation.</span></div>
+          <div class="step"><b>Step 2</b><span>Tap <i>Generate my draft</i> to see the result right here — or copy the prompt into any AI chat (ChatGPT, Claude, Gemini).</span></div>
+          <div class="step"><b>Step 3</b><span>Not quite right? Say "warmer" or "shorter" — refining <i>is</i> the skill, and it takes one tap.</span></div>
+          <div class="step"><b>Your move</b><span>Take it into real life — send it, make the call, cook the plan. On your clock. That's the win, and only you can score it.</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="promptbox">
+          <div class="label">Your copy-paste prompt</div>
+          <button class="copybtn" onclick="copyPrompt()">Copy</button>
+          <pre id="promptText"></pre>
+        </div>
+        <div class="why"><b>Why this works:</b> <span id="whyText"></span></div>
+        <div class="tryit">
+          <div class="t-head">
+            <h4 class="display">✨ Try it right here</h4>
+            <span class="t-note">Simulated in this prototype — the real site generates live</span>
+          </div>
+          <button class="btn small" onclick="generate()">Generate my draft</button>
+          <div class="genout" id="genOut"></div>
+          <div class="refines" id="refineRow">
+            <span>Not quite right?</span>
+            <button class="refinebtn" onclick="refine('warmer')">Make it warmer</button>
+            <button class="refinebtn" onclick="refine('shorter')">Make it shorter</button>
+            <button class="refinebtn" onclick="refine('reset')">Back to first draft</button>
+          </div>
+          <div class="capnote" id="capNote"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doneRow">
+      <button class="btn green" onclick="logWin()">✓ I did it — log my win</button>
+      <button class="btn ghost small" onclick="go('challenge')">Skip to the challenge</button>
+    </div>
+    <div class="winbanner" id="winBanner">
+      <h3 class="display" id="winTitle"></h3>
+      <p>Your streak is now <b><span id="winStreak"></span> days</b>. One last thing — this is the part that builds your Life Portfolio:</p>
+      <div class="reflect">
+        <input type="text" id="reflectInput" maxlength="140" placeholder="In one line: what happened? (e.g., 'Sent it. Landlord replied in 2 hours.')">
+        <button class="btn small green" onclick="saveReflection()">Save to my wins</button>
+      </div>
+      <div class="saved-reflection" id="savedReflection"></div>
+      <br><button class="btn small" onclick="go('challenge')">Now lock it in — play today's challenge →</button>
+    </div>
+  </section>
+
+  <!-- ============ CHALLENGE ============ -->
+  <section id="challenge" class="screen">
+    <div class="day-head">
+      <div>
+        <div class="day-tag">The Daily Challenge · under a minute</div>
+        <h2 class="display">Which prompt wins?</h2>
+      </div>
+      <div class="pill">Round <span id="roundNum">1</span> of 4</div>
+    </div>
+    <p class="sub" style="font-size:17px;margin-top:14px">Two people asked AI for help with the same thing. One got gold, one got mush. <b>Tap the one you think won</b> — then see why. Rounds get sneakier as you go.</p>
+
+    <div id="duelWrap"></div>
+
+    <div class="scorebar">
+      <span class="pill">Today's score: <span id="score">0</span> / 4</span>
+      <span class="pill" style="background:#E4F0E6;border-color:#BBDCC3">🏆 Perfect days this month: 4</span>
+    </div>
+    <div class="sharecard" id="shareCard">
+      <button class="copybtn" onclick="copyShare()">Copy</button>
+      <span id="shareText"></span>
+    </div>
+  </section>
+
+  <!-- ============ MEMBERSHIP ============ -->
+  <section id="member" class="screen">
+    <div class="memb-hero">
+      <span class="kicker">Membership</span>
+      <h2 class="display">Free members get wins.<br>Members get <em style="font-style:normal;color:var(--coral)">proof</em>.</h2>
+      <p class="sub" style="margin-top:16px">The daily mission is free, forever — that's a promise. Membership isn't locked content. It's turning your wins into something you can show the world.</p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier">
+        <h3 class="display">Everyone</h3>
+        <div class="price">$0</div>
+        <div class="per">free forever</div>
+        <ul>
+          <li>The daily mission, every day, all five personas</li>
+          <li>Generate your drafts right on the page (10 a day, free trial)</li>
+          <li>The daily challenge game &amp; streaks</li>
+          <li>The daily mission in your inbox each morning</li>
+        </ul>
+      </div>
+      <div class="tier pro">
+        <div class="badge-top">FOUNDING MEMBERS</div>
+        <h3 class="display">The Winner's Circle</h3>
+        <div class="price">$5</div>
+        <div class="per">per month · founding members keep this price for life</div>
+        <ul>
+          <li><b>Your Life Portfolio</b> — every win and reflection, saved, searchable, yours to keep</li>
+          <li><b>Proof that fits your life</b> — see below: not one certificate for everyone, the right proof for <i>you</i></li>
+          <li><b>Submit your real problem</b> → we turn it into a mission, credited to you by name</li>
+          <li>Unlimited on-page drafts, no daily cap</li>
+        </ul>
+        <br><button class="btn" onclick="toast('You\'re on the Founding Member list! (demo — real waitlist at launch)')">Join the Founding Member waitlist</button>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px">First 100 members get a numbered Founding Member badge — forever.</p>
+      </div>
+    </div>
+
+    <h3 class="display" style="margin-top:44px;font-size:22px">Proof that fits your life</h3>
+    <p style="color:var(--ink-soft);font-size:15px;margin-top:6px;max-width:640px">After 30 logged wins, you choose the proof that matters in <i>your</i> world:</p>
+    <div class="proofgrid">
+      <div class="proof"><b>💼 Job-seeker</b><span>A shareable portfolio link for your résumé: 30 real tasks you completed with AI — evidence, not claims.</span></div>
+      <div class="proof"><b>🏪 Small-business owner</b><span>A printable "This business runs smart — powered by daily AI practice" window badge and web sticker.</span></div>
+      <div class="proof"><b>🖥️ Office worker</b><span>An "AI-Ready" one-pager of your 30 wins — the thing you bring up in your next review.</span></div>
+      <div class="proof"><b>👨‍👧 Parent &amp; 🌻 Retiree</b><span>Milestone celebrations and a family-shareable wins page. No certificates nobody asked for — just your story.</span></div>
+    </div>
+
+    <div class="portfolio">
+      <h3 class="display">Your Life Portfolio — live preview</h3>
+      <p class="p-sub">Wins you log in this session appear here, exactly as a member would keep them.</p>
+      <div class="wins" id="portfolioWins">
+        <div class="win-item"><b>Win #3 · Money</b>Negotiated internet bill down $18/mo using the polite-pressure script.</div>
+        <div class="win-item"><b>Win #12 · Time</b>Planned the whole week's dinners in 6 minutes from a fridge list.</div>
+        <div class="win-item"><b>Win #19 · Work</b>Rewrote my résumé summary — 3 interview calls the following week.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>Interactive prototype v2 · The Five-Minute Win · fiveminutewin.com · All counts, names &amp; testimonials are illustrative placeholders</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= state (in-memory only; the real site persists per account) ================= */
+var streak = 6, score = 0, round = 0, results = [], gensLeft = 10;
+var personaId = 'shop', missionId = 'd7';
+var winLoggedFor = {};
+var winCount = 6;
+
+/* ================= data ================= */
+var PERSONAS = [
+  {id:'shop',    name:'🏪 Small-business owner', short:'Small-business owner', onboard:'🏪 I run a small business'},
+  {id:'parent',  name:'👨‍👧 Parent',             short:'Parent',               onboard:'👨‍👧 I\'m a parent running a family'},
+  {id:'office',  name:'🖥️ Office worker',        short:'Office worker',        onboard:'🖥️ I work a regular job'},
+  {id:'job',     name:'💼 Job-seeker',           short:'Job-seeker',           onboard:'💼 I\'m looking for a job'},
+  {id:'retiree', name:'🌻 Retiree',              short:'Retiree',              onboard:'🌻 I\'m retired (or nearly)'}
+];
+
+var MISSIONS = {
+  d4:{
+    chip:'Day 4 · Money', tag:'Mission · Day 4 · Money', title:'Lower a bill without the awkwardness.',
+    skill:"Today's skill: give AI the goal and the facts — it writes your script and preps you for the pushback.",
+    winMsg:'Win logged. Money conversations stop being scary when you arrive with a script. 🎉',
+    personas:{
+      shop:{
+        storyTitle:'The card fees that keep creeping up',
+        storyBody:"Your card processor's fee has quietly crept from 2.3% to 2.9%. On your revenue that's real money every month — but calling to negotiate feels confrontational, so it stays on the someday list.",
+        prompt:"I run a small shop. My card processor now charges me [your current rate/fees]. A competitor advertises [their rate]. Write me a short, friendly phone script to ask for a better rate: confident, not aggressive, mentions I'm prepared to switch, and includes exactly what to say if they say no. Then list the 2 questions they'll most likely ask me, with suggested answers.",
+        why:"You gave AI a goal (lower rate), leverage (competitor's offer), and a tone (friendly, confident). Asking for the likely pushback questions means you walk into the call prepared instead of hopeful — that preparation is what scripts are for.",
+        sample:"\"Hi, I've been processing with you for three years and I want to keep it that way. My current rate is 2.9%, and I have a written quote at 2.2%. Before I make any changes, I wanted to ask: what can you do on my rate?\"\n\nIf they say no: \"I understand. Could you transfer me to your retention team? I'd like to hear my options before I switch.\"\n\nLikely question 1: \"What's your monthly volume?\" → Have last month's statement in front of you."
+      },
+      parent:{
+        storyTitle:'The internet bill that grew while nobody was looking',
+        storyBody:"Your family's internet-and-phone bundle has gone up twice since you signed. Everyone says \"just call and ask for the promo rate\" — but you never know what to actually say when they start reading the fine print at you.",
+        prompt:"My family's internet + phone bill is [amount] with [company], up from [old amount]. New customers get [their advertised deal]. Write me a short, polite phone script asking for a better rate: mention I've been a customer [X years], I'd rather stay, and I'm ready to compare options. Include what to say if the first agent says no, and the one magic sentence to get to the retention department.",
+        why:"Companies have discounts reserved for people who ask in the right order: loyalty first, comparison second, retention team third. The script encodes that order so you don't have to improvise while someone reads terms at you.",
+        sample:"\"Hi! I've been a customer for six years and my bill has crept from $65 to $89. I see you're offering new customers $55. I'd really rather stay — what can you do for my rate?\"\n\nIf no: \"I understand you might not have that option — could you connect me with your customer retention team? I'd like to review my plan before deciding anything.\"\n\n(That sentence almost always unlocks a better offer.)"
+      },
+      office:{
+        storyTitle:'The insurance renewal that jumped for no reason',
+        storyBody:"Your car insurance renewal arrived 22% higher. Same car, same driving record, no claims. You know you should push back or shop around — but comparing policies feels like homework, so last year you just paid it.",
+        prompt:"My car insurance renewal went from [old price] to [new price] with no claims and no changes. I have a quote from [competitor] for [amount]. Write a short, firm-but-polite message to my insurer asking them to review my premium, mentioning my clean record and the competing quote — and asking directly: \"What is your best rate to keep me?\" Keep it under 100 words.",
+        why:"\"What is your best rate to keep me?\" is a direct question that's hard to deflect — much stronger than \"is there anything you can do?\" AI is good at being politely direct in ways we chicken out of when writing for ourselves.",
+        sample:"Subject: Renewal review request — policy #4471\n\nHi, my renewal quote came in at $1,340, up from $1,095, despite a clean record and no changes. I have a comparable quote from another insurer at $1,050. I've been happy with you and would prefer to stay — so I'll ask directly: what is your best rate to keep me? If a call is easier, I'm available this week.\n\nThanks, Ben"
+      },
+      job:{
+        storyTitle:'The offer you\'re afraid to negotiate',
+        storyBody:"You got the offer — great news. It's a bit under what you hoped, and everyone says \"always negotiate\"… but the fear is real: what if pushing back sours it? You need words that ask for more without risking the yes.",
+        prompt:"I received a job offer: [role] at [salary]. Based on my research, the market range is [range], and I was hoping for [target]. Write a short, warm counter-offer email that expresses genuine excitement, asks for [target], and backs it with my two strongest points: [strength 1] and [strength 2]. No apologies, no ultimatums, under 120 words. Then give me the one confident sentence to say if they phone me instead of replying.",
+        why:"The riskiest part of negotiating is tone — grateful but not apologetic, firm but not adversarial. Feeding AI your strengths and the market range keeps the ask grounded in facts, and 'no apologies, no ultimatums' removes the two classic ways these emails go wrong.",
+        sample:"Subject: Re: Offer — excited, one question\n\nThank you so much — I'm genuinely excited about joining the team and confident I can make a difference quickly. Before I sign, I'd like to ask about the base salary: given my five years running client accounts and the certification I completed this spring, I was hoping we could land at $72,000. If we can get there, I'm ready to accept right away.\n\nLooking forward to it either way,\nBen\n\n(If they call: \"I'm ready to accept today at seventy-two — can we make that work?\")"
+      },
+      retiree:{
+        storyTitle:'The TV bill that assumes you won\'t call',
+        storyBody:"Your cable bill has gone up three times in two years. They're counting on it being too much hassle to do anything about — long menus, hold music, agents reading scripts. Time to arrive with a better script than theirs.",
+        prompt:"I've been a [company] TV customer for [X years]. My bill is now [amount], up from [old amount]. Write me a short, courteous phone script asking for my bill to be reduced: mention my loyalty, that I don't watch most channels, and that I'm considering cancelling for a streaming service. Include what to say when they offer a tiny discount first, and remind me to write down the agent's name and the new price before hanging up.",
+        why:"The first offer is never the real offer — the script's job is to help you politely decline round one and stay comfortable in the pause that follows. And noting the agent's name turns a vague promise into a record.",
+        sample:"\"Hello! I've been a customer for eleven years, and my bill has climbed to $118. Honestly, I only watch a handful of channels, and my grandson keeps telling me streaming would cost $25. I'd rather stay with you — what can you do on my bill?\"\n\nWhen they offer $5 off: \"I appreciate that, but it's not enough to change my decision. Is that really the best you can do for an 11-year customer?\"\n\n(Then: agent's name, new price, effective date — written down.)"
+      }
+    }
+  },
+  d7:{
+    chip:'Day 7 · Words', tag:'Mission · Day 7 · Words', title:'Send the message you\'ve been putting off.',
+    skill:"Today's skill: tell AI exactly the tone you need — then ask for two versions so you stay the decision-maker.",
+    winMsg:'Win logged. That message is out of your head and into the world. 🎉',
+    personas:{
+      shop:{
+        storyTitle:'The supplier who keeps delivering late',
+        storyBody:"You run a small shop. Your supplier has been late three times this month and it's costing you customers. You need to push back firmly — without burning a relationship you depend on. You've drafted this message in your head for a week.",
+        prompt:"I run a small shop and my supplier has delivered late 3 times this month: [briefly describe what happened]. I need a short message that is firm about the problem but keeps the relationship warm, and asks for [what you want to happen]. Keep it under 120 words, no corporate jargon. Give me 2 versions: one firmer, one friendlier.",
+        why:"You told the AI who you are, what happened, the tone you need, a length limit, and asked for two versions to choose from. Those five ingredients turn a vague draft into exactly your voice.",
+        sample:"Hi Daniel — I wanted to raise something while it's still small. Deliveries came late three times this month (the 3rd, 10th, and 16th), and each time I had empty shelves during the morning rush. I know things happen, but I need us back to reliable Thursday drop-offs — can you confirm that's doable from next week? You've been a great partner for two years and I'd like to keep it exactly that way.\n\n— Marisol"
+      },
+      parent:{
+        storyTitle:'The teacher email you keep rewriting',
+        storyBody:"Your kid is struggling in one class and you've started an email to the teacher four times. Too pushy? Too soft? You want to be taken seriously as a partner, not flagged as 'that parent.'",
+        prompt:"I'm a parent writing to my child's teacher. The situation: [what's going on with your kid]. I want to come across as a supportive partner, not a complainer, and I'd like to ask for [what you're hoping the teacher will do]. Write a warm, respectful email under 150 words, then tell me in one line what tone it strikes.",
+        why:"Naming the fear ('not a complainer') is the trick — AI is remarkably good at threading a tone needle when you tell it exactly which needle. The one-line tone check makes the AI grade its own work.",
+        sample:"Subject: Checking in about Mina — and how I can help\n\nHi Ms. Park, I wanted to reach out because Mina has seemed discouraged about math lately — homework that used to take 20 minutes now ends in tears. I know you see a side of her we don't, so I'd love your read: is she struggling with the material, or losing confidence? If there's anything we can do at home to back up what you're doing in class, we're all in.\n\nThank you for everything you do,\nBen\n\n(Tone: collaborative and warm — a partner asking for insight, not a complaint.)"
+      },
+      office:{
+        storyTitle:'The delay you have to tell your manager about',
+        storyBody:"The project is going to be late. Not disastrously — but you've rewritten the message to your manager five times, bouncing between over-apologizing and sounding like you don't care. It's now two days overdue as a message, which is worse than the delay itself.",
+        prompt:"I need to tell my manager that [project] will be [X days] late because [honest reason]. Write a short message that owns the delay without groveling, gives the new realistic date, and offers one concrete step I'm taking to prevent a repeat. Under 100 words, professional but human. Give me 2 versions: one more formal, one more direct.",
+        why:"Own it, new date, prevention step — that three-part shape is what good managers actually want, and AI assembles it without the emotional spiral. The 'no groveling' instruction matters: apology inflation reads worse than the delay.",
+        sample:"Hi Sarah — flagging early: the vendor report will land Thursday instead of Tuesday. The data export from the old system took two days longer than scoped. The extra time also means the numbers will be reconciled, not preliminary. To prevent a repeat, I've asked IT for a standing export so we're never waiting on it again. Happy to walk you through where things stand today if useful.\n\n— Ben"
+      },
+      job:{
+        storyTitle:'Following up without sounding desperate',
+        storyBody:"You interviewed nine days ago. Silence. Everyone says 'just follow up!' but every draft you write sounds either needy or robotic. This message could genuinely matter.",
+        prompt:"I interviewed for a [job title] role 9 days ago and haven't heard back. Write a short follow-up email that sounds confident and warm, not desperate. Mention one specific thing from my interview: [something you discussed]. Under 100 words. Then give me a version that's 30% more casual so I can pick.",
+        why:"The one specific detail from your interview is what separates a memorable follow-up from spam — and asking for a 'more casual' second version teaches you to steer tone like a dial, not a guess.",
+        sample:"Subject: Great speaking last week — quick follow-up\n\nHi Mr. Cho, I've been thinking about our conversation — especially your point about the team rebuilding the onboarding flow this fall. That's exactly the kind of project I'd love to sink my teeth into. I remain very interested in the coordinator role and happy to share anything else that would help the decision. Whatever the timeline looks like, I'd appreciate an update when you have one.\n\nWarm regards,\nBen"
+      },
+      retiree:{
+        storyTitle:'The insurance letter that makes no sense',
+        storyBody:"A letter from your insurance company arrived and it might as well be in another language. You need to reply by Friday, and you refuse to pay for something you don't understand.",
+        prompt:"I'm going to paste a letter from my insurance company. First, explain what it actually says in plain language, like you'd explain to a friend. Then tell me the one thing they're really asking me to do, and draft a short reply asking [your question] in a way they must answer clearly. Here's the letter: [paste it]",
+        why:"'Explain it like you'd explain to a friend' flips AI from formal to human instantly. And making it identify 'the one thing they really want' cuts through pages of fine print in seconds.",
+        sample:"In plain language: they've changed your plan's terms, and unless you reply by Friday, you'll be moved to a new plan that costs $22 more per month for slightly different coverage.\n\nThe one thing they want: your consent by silence. Doing nothing = accepting.\n\nDraft reply: \"Regarding your letter dated July 2 (ref 88-C): before I accept any change, please confirm in writing — (1) my exact new monthly premium, and (2) what was covered before that will not be covered now. I do not consent to changes until I receive this.\""
+      }
+    }
+  },
+  d12:{
+    chip:'Day 12 · Time', tag:'Mission · Day 12 · Time', title:'Turn what you already have into this week\'s plan.',
+    skill:"Today's skill: hand AI your messy reality — a quick list, exactly as it is — and let it do the organizing.",
+    winMsg:'Win logged. A week of decisions, made in five minutes. 🎉',
+    personas:{
+      parent:{
+        storyTitle:'Five dinners, two picky kids, one tired human',
+        storyBody:"It's 5pm and the daily question is back: what's for dinner? Multiply by five school nights, subtract the four foods your kids actually eat, and it's the most exhausting small problem in your week. Your fridge already holds the answer — it just needs organizing.",
+        prompt:"Here's what's in my kitchen right now: [list it fast — don't tidy the list, just type what you see]. My kids will eat [the honest short list] and refuse [the refusals]. Plan 5 weeknight dinners using mostly what I have, each under 30 minutes. Mark which need something from the store, and put those items in one short shopping list at the end.",
+        why:"The magic instruction is 'don't tidy the list.' AI is built to organize mess — the more honestly messy your input, the more useful the plan. You skip the part of planning that makes planning miserable: turning chaos into categories.",
+        sample:"Mon — Chicken fried rice (have: rice, eggs, chicken thighs, frozen peas) ✓ all on hand\nTue — Quesadilla night (have: tortillas, cheese; kids build their own = no complaints)\nWed — Pasta with hidden-veg tomato sauce (blend the zucchini — they'll never know)\nThu — Breakfast-for-dinner: pancakes + fruit ✓ all on hand\nFri — Sheet-pan sausages & potatoes (need: sausages)\n\nShopping list: sausages, 1 jar tomato sauce, milk."
+      },
+      shop:{
+        storyTitle:'Feed yourself like someone who doesn\'t stand in a shop all day',
+        storyBody:"Six shop days a week means dinner is whatever's fastest at 9pm — which is expensive, unhealthy, and honestly a bit sad. One Sunday hour of batch cooking would fix it, if figuring out what to cook didn't feel like a second job.",
+        prompt:"I work long days in my shop, 6 days a week, and get home around 8:30pm. Plan me a Sunday batch-cooking session: 1 hour max, using [what's in your kitchen + budget], producing 5 grab-and-heat dinners for the week. Give me the cooking order so everything overlaps efficiently — start with what takes longest, and tell me exactly what to do while each thing cooks.",
+        why:"The unlock is asking for the cooking order, not just recipes. 'What do I do while the rice cooks?' is the difference between one efficient hour and three chaotic ones — AI is excellent at scheduling, and cooking is a schedule.",
+        sample:"Your hour, in order:\n0:00 — Oven on 200°C. Rice cooker on (2 cups).\n0:05 — Tray of chicken thighs + potatoes into oven (40 min).\n0:10 — Chop onions/peppers while it roasts. Start big pot of chili on the stove.\n0:35 — Chili simmering; portion rice into 5 containers.\n0:45 — Pull tray; split chicken over 3 rice boxes, chili into 2.\n0:55 — Cool, lid, fridge. Done: 3 chicken-and-potato boxes, 2 chili-and-rice."
+      },
+      office:{
+        storyTitle:'Stop buying the $15 lunch you don\'t even like',
+        storyBody:"Every workday, noon arrives and you're queueing for a lunch that costs too much and disappoints anyway. That's ~$75 a week for mediocrity. Fifteen minutes on Sunday could take back most of it — if the planning weren't the annoying part.",
+        prompt:"I buy lunch every workday (~[amount]/week) and want to prep instead. I have [15–30] minutes on Sunday and these things in my kitchen: [quick list]. Plan 4 grab-and-go lunches that survive a desk fridge, don't need reheating (or reheat well), and won't bore me by Thursday. Include the 5-item-max shopping list and how much I'll save this week.",
+        why:"Constraints are the whole prompt: time cap, desk-fridge-proof, boredom-proof, tiny shopping list. Every constraint you name is a bad outcome you've prevented — that's the skill, and it works for far more than lunches.",
+        sample:"Mon — Chickpea & feta couscous jar (5 min to assemble, no reheat)\nTue — Chicken wrap kit: tortilla + roast chicken + slaw, assembled at desk so it doesn't go soggy\nWed — Sesame noodle box, eaten cold on purpose (better cold, actually)\nThu — Rice + fried-egg bowl with chili crisp (2-min office microwave)\n\nShopping list: couscous, feta, tortillas, slaw mix, chili crisp.\nThis week: ~$62 saved."
+      },
+      job:{
+        storyTitle:'Eat well on a job-hunt budget',
+        storyBody:"Job hunting is a full-time job that doesn't pay. The food budget is tight, delivery is a trap, and decision fatigue from applications leaves nothing for meal decisions. You need a week of cheap, decent eating planned in one shot.",
+        prompt:"My grocery budget this week is [amount]. Here's what I already have: [quick list]. Plan 7 dinners and easy lunches that fit the budget, reuse ingredients across meals so nothing is wasted, and take under 30 minutes each. Give me one shopping list organized by supermarket aisle, with a running cost estimate next to it.",
+        why:"'Reuse ingredients across meals' is the instruction that makes a small budget behave like a bigger one — AI plans the overlaps (tonight's roast chicken is tomorrow's fried rice) that we don't have the patience to design ourselves.",
+        sample:"Shopping list (~$38):\nProduce — onions, carrots, cabbage, bananas ($7)\nProtein — whole chicken ($8), eggs ×12 ($4), tofu ($2)\nPantry — rice ($5), pasta ($2), lentils ($3), tinned tomatoes ×3 ($4), oats ($3)\n\nThe overlap plan: Sun roast chicken → Mon chicken fried rice → Tue carcass makes soup stock → Wed lentil-tomato pasta → Thu egg & cabbage stir-fry → Fri tofu curry → Sat lentil soup from Tuesday's stock. Nothing wasted."
+      },
+      retiree:{
+        storyTitle:'Cooking for two without cooking for six',
+        storyBody:"Forty years of cooking for a full table is a hard habit to shrink. Pots are too big, leftovers multiply, and half the vegetable drawer goes soft before it's used. The goal isn't new recipes — it's right-sizing the week.",
+        prompt:"We're a household of two. Here's what's in the fridge and pantry: [quick honest list, including the things about to go soft]. Plan this week's dinners for two — proper portions, no mountain of leftovers — starting with whatever needs using first. If something will still be left over, tell me exactly what tomorrow's lunch does with it.",
+        why:"'Start with whatever needs using first' turns AI into the anti-waste planner — it sequences the week around your vegetable drawer's deadlines. And pre-assigning leftovers to tomorrow's lunch is how they get eaten instead of archived.",
+        sample:"Use-first ranking: spinach (today!), mushrooms (by Tue), that half cabbage (by Thu).\n\nSun — Mushroom & spinach omelettes for two (uses both urgent items)\nMon — Pork chops with the last mushrooms + rice for two\nTue — Cabbage stir-fry with noodles (half portion — planned!)\nWed — Leftover stir-fry becomes lunch spring-roll filling\nThu — Salmon, small potatoes, green beans\nFri — 'Fridge-clearing' fried rice: whatever remains, plus two eggs on top."
+      }
+    }
+  }
+};
+
+var ROUNDS = [
+  {
+    task:"Warm-up — both asked AI to help write a birthday message for a coworker they barely know.",
+    a:"Write a birthday message for my coworker.",
+    b:"Write a short, warm birthday message for a coworker I don't know well. We only ever chat about coffee and the office plants. Make it friendly but not over-the-top, one or two sentences.",
+    winner:"b",
+    verdict:"B gave the AI the relationship ('barely know her'), the shared ground (coffee, plants), and the tone limit ('not over-the-top'). A got a generic greeting card; B got something that sounds like an actual human who sits ten feet away. Details you'd mention to a friend are details the AI needs too."
+  },
+  {
+    task:"Both got a wrong answer from the AI and wanted a better one.",
+    a:"That's not what I meant. My budget is tight this month, so make the meal plan cheaper — swap anything fancy for basics like eggs, beans, or frozen veg.",
+    b:"Wrong. Try again.",
+    winner:"a",
+    verdict:"A treats the AI like a helpful intern: say what missed, why, and what to do instead — and it fixes it in one go. B just rerolls the dice and usually gets different-flavored wrong. The #1 beginner unlock isn't the first prompt; it's how you steer the second one."
+  },
+  {
+    task:"Getting sneakier — both wanted AI to improve a paragraph they'd written.",
+    a:"Make this paragraph better: [their paragraph]",
+    b:"Here's my paragraph: [their paragraph]. Give me 3 versions — one more confident, one shorter, one more casual — and tell me in one line what you changed in each.",
+    winner:"b",
+    verdict:"'Better' forces the AI to guess what better means — and its guess overwrites your voice. B asks for labeled options, so you see the trade-offs and stay the decision-maker. Options beat verdicts, and the one-line change notes quietly teach you editing."
+  },
+  {
+    task:"The tricky one — both wanted help planning a big family reunion.",
+    a:"Help me plan a family reunion for about 30 people in August. We need a venue idea, a food plan for mixed diets including my vegan niece, activities for kids aged 4–12 and for grandparents, a rough budget around $800, a rain backup, and a schedule from 11am to 6pm.",
+    b:"Help me plan a family reunion. Before you write any plan, ask me the five most important questions, one at a time.",
+    winner:"b",
+    verdict:"Sneaky, right? A looks like the 'perfect prompt' — but you can only list what you've already thought of, and the plan quietly inherits your blind spots (who's driving grandma? is anyone bringing a dog?). B turns the AI into an interviewer that surfaces what you didn't think to say. For big, fuzzy tasks: let AI ask first."
+  }
+];
+
+/* ================= navigation ================= */
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on')});
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('nav-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='challenge' && round===0){startChallenge();}
+}
+
+/* ================= onboarding ================= */
+function buildOnboard(){
+  var list = document.getElementById('onboardList');
+  PERSONAS.forEach(function(p){
+    var b = document.createElement('button');
+    b.textContent = p.onboard;
+    b.onclick = function(){closeOnboard(p.id)};
+    list.appendChild(b);
+  });
+}
+function closeOnboard(id){
+  if(id){personaId = id;}
+  document.getElementById('onboard').classList.add('hide');
+  renderMission();
+  if(id){toast('Got it — everything is now written for a '+personaFor(id).short.toLowerCase()+'. Switch anytime.');}
+}
+function personaFor(id){for(var i=0;i<PERSONAS.length;i++){if(PERSONAS[i].id===id)return PERSONAS[i];}return PERSONAS[0];}
+
+/* ================= mission ================= */
+function renderMission(){
+  var m = MISSIONS[missionId];
+  var c = m.personas[personaId];
+  document.getElementById('mTag').textContent = m.tag;
+  document.getElementById('mTitle').textContent = m.title;
+  document.getElementById('mSkill').textContent = m.skill;
+  var chips = document.getElementById('dayChips');
+  chips.innerHTML = '';
+  Object.keys(MISSIONS).forEach(function(k){
+    var b = document.createElement('button');
+    b.className = 'daychip' + (k===missionId?' sel':'');
+    b.textContent = MISSIONS[k].chip + (k==='d7'?' · today':'');
+    b.onclick = function(){missionId=k;renderMission();};
+    chips.appendChild(b);
+  });
+  var row = document.getElementById('personaRow');
+  row.innerHTML = '';
+  PERSONAS.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'persona' + (p.id===personaId?' sel':'');
+    b.textContent = p.name;
+    b.onclick = function(){personaId=p.id;renderMission();};
+    row.appendChild(b);
+  });
+  document.getElementById('personaLabel').textContent = personaFor(personaId).short;
+  document.getElementById('storyTitle').textContent = c.storyTitle;
+  document.getElementById('storyBody').textContent = c.storyBody;
+  document.getElementById('promptText').textContent = c.prompt;
+  document.getElementById('whyText').textContent = c.why;
+  document.getElementById('genOut').classList.remove('show');
+  document.getElementById('refineRow').classList.remove('show');
+  document.getElementById('winBanner').classList.toggle('show', !!winLoggedFor[missionId]);
+  document.getElementById('capNote').textContent = 'Free trial: '+gensLeft+' of 10 on-page drafts left today. Members: unlimited.';
+}
+
+function copyPrompt(){
+  var t = document.getElementById('promptText').textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(t);}
+  toast('Prompt copied — paste it into any AI chat');
+}
+
+var currentDraft = '';
+function generate(){
+  if(gensLeft<=0){toast('Free daily limit reached — members generate without limits');return;}
+  gensLeft--;
+  currentDraft = MISSIONS[missionId].personas[personaId].sample;
+  var out = document.getElementById('genOut');
+  out.textContent = '⏳ Writing your draft…';
+  out.classList.add('show');
+  setTimeout(function(){
+    out.textContent = currentDraft;
+    document.getElementById('refineRow').classList.add('show');
+    document.getElementById('capNote').textContent = 'Free trial: '+gensLeft+' of 10 on-page drafts left today. Members: unlimited.';
+  }, 700);
+}
+function refine(mode){
+  var out = document.getElementById('genOut');
+  var text = currentDraft;
+  if(mode==='shorter'){
+    var parts = text.split(/\n\n/);
+    text = parts[0] + (parts.length>1 ? '\n\n' + parts[parts.length-1] : '');
+    text = '✂️ (Shortened — simulated refinement)\n\n' + text;
+  } else if(mode==='warmer'){
+    text = '☀️ (Warmer — simulated refinement)\n\nHope you\'re doing well! ' + text + '\n\nThanks so much — I really appreciate it.';
+  }
+  out.textContent = '⏳ Refining…';
+  setTimeout(function(){out.textContent = text;}, 500);
+}
+
+function logWin(){
+  if(!winLoggedFor[missionId]){streak++; winCount++; winLoggedFor[missionId]=true;}
+  document.getElementById('streakCount').textContent = streak;
+  document.getElementById('winStreak').textContent = streak;
+  document.getElementById('winTitle').textContent = 'Win #'+winCount+' — ' + MISSIONS[missionId].winMsg;
+  document.getElementById('winBanner').classList.add('show');
+  document.getElementById('winBanner').scrollIntoView({behavior:'smooth',block:'center'});
+  toast('🔥 Streak: '+streak+' days');
+}
+
+function saveReflection(){
+  var v = document.getElementById('reflectInput').value.trim();
+  if(!v){toast('One line is all it takes — what happened?');return;}
+  var s = document.getElementById('savedReflection');
+  s.textContent = '📔 Saved to your wins: “'+v+'”';
+  s.classList.add('show');
+  var domain = MISSIONS[missionId].tag.split('·')[2].trim();
+  var item = document.createElement('div');
+  item.className = 'win-item live';
+  item.innerHTML = '<b>Win #'+winCount+' · '+domain+' · just now</b>' + v.replace(/</g,'&lt;');
+  document.getElementById('portfolioWins').prepend(item);
+  toast('Saved — see it live on the Membership page (Life Portfolio)');
+}
+
+/* ================= challenge ================= */
+function startChallenge(){
+  round = 1; score = 0; results = [];
+  document.getElementById('score').textContent = score;
+  document.getElementById('shareCard').classList.remove('show');
+  drawDuel();
+}
+function drawDuel(){
+  var r = ROUNDS[round-1];
+  document.getElementById('roundNum').textContent = round;
+  var order = (round % 2 === 1) ? ['a','b'] : ['b','a'];
+  var html = '<p style="font-weight:700;margin-top:22px">'+r.task+'</p><div class="duel">';
+  order.forEach(function(k,i){
+    html += '<div class="duel-card" id="card-'+k+'" onclick="pick(\''+k+'\')">'+
+            '<div class="tag">Prompt '+(i===0?'One':'Two')+'</div><pre>'+r[k]+'</pre></div>';
+  });
+  html += '</div><div class="verdict" id="verdict"><h3 class="display" id="vTitle"></h3><p id="vBody"></p><br><button class="btn small" id="nextBtn"></button></div>';
+  document.getElementById('duelWrap').innerHTML = html;
+}
+function pick(k){
+  var r = ROUNDS[round-1];
+  if(document.getElementById('verdict').classList.contains('show')) return;
+  var correct = (k === r.winner);
+  if(correct) score++;
+  results.push(correct);
+  document.getElementById('score').textContent = score;
+  var winCard = document.getElementById('card-'+r.winner);
+  var loseCard = document.getElementById('card-'+(r.winner==='a'?'b':'a'));
+  winCard.classList.add('win');
+  loseCard.classList.add('lose');
+  winCard.insertAdjacentHTML('beforeend','<div class="resmark good">✓</div>');
+  loseCard.insertAdjacentHTML('beforeend','<div class="resmark bad">✗</div>');
+  document.getElementById('vTitle').textContent = correct ? "✓ You spotted it!" : "✗ Sneaky one — here's the tell:";
+  document.getElementById('vBody').textContent = r.verdict;
+  var btn = document.getElementById('nextBtn');
+  if(round < ROUNDS.length){
+    btn.textContent = "Next round →";
+    btn.onclick = function(){round++;drawDuel();};
+  } else {
+    btn.textContent = "See my result";
+    btn.onclick = finishChallenge;
+  }
+  document.getElementById('verdict').classList.add('show');
+}
+function finishChallenge(){
+  var msg = score === 4 ? "Perfect 4/4! You officially have better prompt instincts than most of the internet. 🏆"
+          : score >= 2 ? score+"/4 — solid. The tells get easier to spot every day you play."
+          : score+"/4 today — which means tomorrow you'll never fall for these again.";
+  var squares = results.map(function(c){return c?'🟩':'⬛'}).join('');
+  document.getElementById('duelWrap').innerHTML =
+    '<div class="winbanner show" style="margin-top:26px"><h3 class="display">'+msg+'</h3>'+
+    '<p>New challenge tomorrow with the daily mission. Streak safe: 🔥 '+streak+' days.</p></div>';
+  document.getElementById('shareText').textContent = 'The Five-Minute Win — Challenge, Day 7\n'+squares+'  '+score+'/4\n🔥 '+streak+'-day streak\nfiveminutewin.com';
+  document.getElementById('shareCard').classList.add('show');
+}
+function copyShare(){
+  var t = document.getElementById('shareText').textContent;
+  if(navigator.clipboard){navigator.clipboard.writeText(t);}
+  toast('Copied — paste it anywhere ✨');
+}
+
+/* ================= toast ================= */
+var toastTimer;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){t.classList.remove('show')},3000);
+}
+
+buildOnboard();
+renderMission();
+</script>
+</body>
+</html>

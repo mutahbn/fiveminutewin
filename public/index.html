@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Five-Minute Win — One real-life win with AI. Five minutes here.</title>
+<meta name="description" content="One real-life win with AI, every day. Five minutes here gets you armed — the exact email, script, or plan. Then you make your move.">
+<style>
+  :root{
+    --cream:#FAF5EC; --paper:#FFFDF8; --ink:#221C14; --ink-soft:#5C5347;
+    --coral:#E8593F; --coral-dark:#C74128; --amber:#F2A33C;
+    --green:#3E7C4F; --green-soft:#E4F0E6; --red-soft:#FBE3DC;
+    --line:#E7DECF; --shadow:0 2px 0 rgba(34,28,20,.08); --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .display{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;letter-spacing:-.01em;}
+  header{position:sticky;top:0;z-index:50;background:rgba(250,245,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .bar{max-width:1040px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:18px;}
+  .logo{display:flex;align-items:baseline;gap:8px;cursor:pointer;}
+  .logo .mark{width:30px;height:30px;border-radius:9px;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;transform:translateY(6px);}
+  .logo .name{font-weight:800;font-size:19px;}
+  .logo .dom{font-size:12px;color:var(--ink-soft);}
+  nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;}
+  nav button{border:0;background:transparent;font:inherit;font-weight:600;font-size:14px;color:var(--ink-soft);padding:8px 12px;border-radius:10px;cursor:pointer;}
+  nav button:hover{background:#F0E8D9;color:var(--ink);}
+  nav button.active{background:var(--ink);color:var(--cream);}
+  .streak{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;background:#FDEBD2;border:1px solid #F4D6A6;padding:7px 12px;border-radius:999px;white-space:nowrap;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px 90px;}
+  .screen{display:none;animation:fade .35s ease;}
+  .screen.on{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .hero{padding:66px 0 26px;max-width:760px;}
+  .kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-dark);background:#FBE3DC;padding:6px 12px;border-radius:999px;margin-bottom:22px;}
+  h1{font-size:clamp(38px,6vw,62px);line-height:1.06;font-weight:700;}
+  h1 em{font-style:normal;color:var(--coral);}
+  .sub{font-size:20px;color:var(--ink-soft);margin:22px 0 28px;max-width:560px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;background:var(--coral);color:#fff;font:inherit;font-weight:700;font-size:17px;padding:15px 26px;border-radius:14px;box-shadow:0 3px 0 var(--coral-dark);transition:transform .08s ease;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(1px);box-shadow:none;}
+  .btn.ghost{background:transparent;color:var(--ink);box-shadow:none;border:2px solid var(--ink);}
+  .btn.small{font-size:14px;padding:10px 16px;border-radius:11px;}
+  .btn.green{background:var(--green);box-shadow:0 3px 0 #2C5C3A;}
+  .btn:disabled{opacity:.5;cursor:default;transform:none;}
+  .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:52px 0 10px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+  .card .num{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--cream);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:14px;}
+  .card h3{font-size:18px;margin-bottom:6px;}
+  .card p{font-size:14.5px;color:var(--ink-soft);}
+  .strip{margin-top:52px;background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:34px;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;}
+  .strip h3{font-size:22px;max-width:460px;line-height:1.3;}
+  .day-head{padding:46px 0 6px;display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+  .day-tag{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+  h2{font-size:clamp(26px,4.2vw,40px);line-height:1.12;margin-top:6px;}
+  .skill-line{margin-top:10px;font-size:14.5px;font-weight:600;color:var(--coral-dark);background:#FBE3DC;display:inline-block;padding:6px 14px;border-radius:999px;}
+  .note-line{margin-top:10px;font-size:13px;color:var(--ink-soft);max-width:640px;}
+  .daychips{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 4px;}
+  .daychip{border:2px solid var(--line);background:var(--paper);font:inherit;font-size:13.5px;font-weight:700;padding:8px 14px;border-radius:12px;cursor:pointer;color:var(--ink-soft);}
+  .daychip.sel{border-color:var(--coral);background:var(--coral);color:#fff;}
+  .daychips-note{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .personas{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 6px;}
+  .persona{border:2px solid var(--line);background:var(--paper);font:inherit;font-size:14px;font-weight:600;padding:9px 15px;border-radius:999px;cursor:pointer;color:var(--ink-soft);}
+  .persona.sel{border-color:var(--ink);background:var(--ink);color:var(--cream);}
+  .persona-note{font-size:13.5px;font-weight:600;margin-bottom:20px;}
+  .persona-note b{color:var(--coral-dark);}
+  .mission-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;}
+  @media(max-width:820px){.mission-grid{grid-template-columns:1fr;}}
+  .story{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);}
+  .story h3{font-size:20px;margin-bottom:10px;}
+  .story p{color:var(--ink-soft);font-size:15.5px;margin-bottom:12px;white-space:pre-wrap;}
+  .fills{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px;}
+  .fills h4{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--coral-dark);margin-bottom:10px;}
+  .fill{margin-bottom:10px;}
+  .fill label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:4px;}
+  .fill input,.fill textarea{width:100%;font:inherit;font-size:14px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--cream);}
+  .fill textarea{min-height:64px;resize:vertical;}
+  .fill input:focus,.fill textarea:focus{outline:2px solid var(--coral);border-color:transparent;}
+  .promptbox{background:#26201A;color:#F5EEDF;border-radius:var(--radius);padding:22px;position:relative;}
+  .promptbox .label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
+  .promptbox pre{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#F5EEDF;}
+  .promptbox pre .flld{color:#FFD9A0;}
+  .copybtn{position:absolute;top:16px;right:16px;border:1px solid #4A4030;background:transparent;color:#D8CDB8;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;}
+  .copybtn:hover{background:#3A3226;}
+  .why{margin-top:14px;background:#FDF3E3;border:1px solid #F4D6A6;border-radius:14px;padding:15px 17px;font-size:14px;}
+  .why b{color:var(--coral-dark);}
+  .tryit{margin-top:14px;background:var(--paper);border:2px solid var(--coral);border-radius:var(--radius);padding:20px;}
+  .tryit .t-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .tryit h4{font-size:16px;}
+  .tryit .t-note{font-size:11.5px;color:var(--ink-soft);}
+  .genout{display:none;margin-top:14px;background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14px;line-height:1.6;white-space:pre-wrap;}
+  .genout.show{display:block;animation:fade .35s;}
+  .genout.err{border-color:var(--coral);background:#FBE3DC;}
+  .refines{display:none;margin-top:12px;gap:8px;flex-wrap:wrap;align-items:center;}
+  .refines.show{display:flex;}
+  .refines span{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+  .refinebtn{border:1.5px solid var(--ink);background:transparent;font:inherit;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer;}
+  .refinebtn:hover{background:var(--ink);color:var(--cream);}
+  .capnote{margin-top:10px;font-size:12px;color:var(--ink-soft);}
+  .doneRow{margin-top:26px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .winbanner{display:none;margin-top:22px;background:var(--green-soft);border:2px solid var(--green);border-radius:var(--radius);padding:22px 24px;}
+  .winbanner.show{display:block;animation:fade .4s ease;}
+  .winbanner h3{color:var(--green);font-size:19px;margin-bottom:6px;}
+  .winbanner p{font-size:14.5px;color:var(--ink-soft);}
+  .reflect{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+  .reflect input{flex:1;min-width:230px;font:inherit;font-size:14px;padding:11px 14px;border:1.5px solid var(--line);border-radius:11px;background:var(--paper);}
+  .reflect input:focus{outline:2px solid var(--green);border-color:transparent;}
+  .saved-reflection{display:none;margin-top:12px;font-size:14px;background:var(--paper);border:1px dashed var(--green);border-radius:11px;padding:12px 14px;}
+  .saved-reflection.show{display:block;}
+  .duel{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
+  @media(max-width:720px){.duel{grid-template-columns:1fr;}}
+  .duel-card{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);padding:24px;cursor:pointer;transition:border-color .15s, transform .08s;}
+  .duel-card:hover{border-color:var(--ink);transform:translateY(-2px);}
+  .duel-card.win{border-color:var(--green);background:var(--green-soft);}
+  .duel-card.lose{border-color:#D8B9B2;opacity:.7;}
+  .duel-card .tag{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;}
+  .duel-card pre{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;}
+  .resmark{position:absolute;top:-14px;right:16px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;}
+  .resmark.good{background:var(--green);}
+  .resmark.bad{background:var(--coral-dark);}
+  .verdict{display:none;margin-top:18px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);}
+  .verdict.show{display:block;animation:fade .35s;}
+  .verdict h3{font-size:18px;margin-bottom:8px;}
+  .verdict p{font-size:15px;color:var(--ink-soft);}
+  .scorebar{margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .pill{background:#FDEBD2;border:1px solid #F4D6A6;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;}
+  .sharecard{display:none;margin-top:16px;background:#26201A;color:#F5EEDF;border-radius:14px;padding:18px;font-family:ui-monospace,Menlo,monospace;font-size:14px;white-space:pre-wrap;position:relative;}
+  .sharecard.show{display:block;}
+  .memb-hero{padding:50px 0 6px;max-width:720px;}
+  .tiers{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px;}
+  @media(max-width:760px){.tiers{grid-template-columns:1fr;}}
+  .tier{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);}
+  .tier.pro{border:2px solid var(--coral);position:relative;}
+  .tier .price{font-size:34px;font-weight:800;margin:8px 0 2px;}
+  .tier .per{font-size:13px;color:var(--ink-soft);margin-bottom:18px;}
+  .tier ul{list-style:none;}
+  .tier li{padding:9px 0 9px 24px;border-top:1px dashed var(--line);font-size:14.5px;position:relative;}
+  .tier li::before{content:"✓";color:var(--green);font-weight:800;position:absolute;left:0;top:9px;}
+  .badge-top{position:absolute;top:-13px;left:26px;background:var(--coral);color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:999px;letter-spacing:.05em;}
+  .wl{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+  .wl input{flex:1 1 100%;font:inherit;font-size:16px;padding:13px 14px;border:1.5px solid var(--line);border-radius:11px;background:var(--cream);}
+  .wl .btn{flex:1 1 auto;justify-content:center;}
+  .wl input:focus{outline:2px solid var(--coral);border-color:transparent;}
+  .wl-result{display:none;margin-top:12px;font-weight:700;color:var(--green);font-size:15px;}
+  .wl-result.show{display:block;}
+  .proofgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:26px;}
+  .proof{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px;font-size:13.5px;box-shadow:var(--shadow);}
+  .proof b{display:block;margin-bottom:5px;font-size:13px;}
+  .proof span{color:var(--ink-soft);}
+  .portfolio{margin-top:40px;background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:34px;}
+  .portfolio h3{font-size:22px;margin-bottom:6px;}
+  .portfolio .p-sub{font-size:14px;color:#C9BFA9;margin-bottom:18px;}
+  .wins{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
+  .win-item{background:#332B21;border-radius:14px;padding:16px;font-size:13.5px;line-height:1.5;}
+  .win-item b{color:var(--amber);display:block;margin-bottom:4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+  footer{border-top:1px solid var(--line);margin-top:70px;padding:26px 22px;text-align:center;font-size:13px;color:var(--ink-soft);}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--cream);padding:13px 22px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;transition:all .3s ease;z-index:99;max-width:88vw;text-align:center;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .overlay{position:fixed;inset:0;background:rgba(34,28,20,.55);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;}
+  .overlay.on{display:flex;}
+  .modal{background:var(--cream);border-radius:22px;padding:36px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:fade .4s;}
+  .modal h2{font-size:26px;margin-bottom:8px;}
+  .modal p{font-size:15px;color:var(--ink-soft);margin-bottom:20px;}
+  .modal .plist{display:flex;flex-direction:column;gap:8px;}
+  .modal .plist button{text-align:left;font:inherit;font-size:15.5px;font-weight:600;background:var(--paper);border:2px solid var(--line);border-radius:13px;padding:13px 17px;cursor:pointer;}
+  .modal .plist button:hover{border-color:var(--coral);}
+  .modal .skip{margin-top:14px;background:none;border:none;font:inherit;font-size:13.5px;color:var(--ink-soft);text-decoration:underline;cursor:pointer;}
+  .loading{padding:60px 0;text-align:center;color:var(--ink-soft);font-size:15px;}
+  nav button .ico{display:none;}
+
+  /* ---------- helper chat ---------- */
+  .chips-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 16px;}
+  .chip-ex{border:1.5px dashed var(--line);background:var(--paper);font:inherit;font-size:13px;font-weight:600;color:var(--ink-soft);padding:8px 14px;border-radius:999px;cursor:pointer;}
+  .chip-ex:hover{border-color:var(--coral);color:var(--coral-dark);}
+  .chatbox{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}
+  .msg{max-width:78%;padding:14px 17px;border-radius:16px;font-size:14.5px;line-height:1.55;white-space:pre-wrap;animation:fade .3s;}
+  .msg.user{align-self:flex-end;background:var(--ink);color:var(--cream);border-bottom-right-radius:5px;}
+  .msg.ai{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:5px;box-shadow:var(--shadow);}
+  .msg.typing{color:var(--ink-soft);font-style:italic;}
+  .learnbox{align-self:stretch;background:#FDF3E3;border:2px solid var(--amber);border-radius:16px;padding:18px;position:relative;animation:fade .4s;}
+  .learnbox .lb-title{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-dark);margin-bottom:8px;}
+  .learnbox pre{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;}
+  .learnbox .copybtn{border-color:var(--amber);color:var(--coral-dark);}
+  .chat-input{display:flex;gap:8px;align-items:flex-end;}
+  .chat-input textarea{flex:1;font:inherit;font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:13px;background:var(--paper);resize:none;}
+  .chat-input textarea:focus{outline:2px solid var(--coral);border-color:transparent;}
+
+  /* ============ mobile ============ */
+  @media(max-width:640px){
+    header{backdrop-filter:none;background:var(--cream);}
+    .bar{padding:10px 14px;gap:10px;flex-wrap:nowrap;}
+    .logo .dom{display:none;}
+    .logo .name{font-size:16px;}
+    .logo .mark{width:26px;height:26px;font-size:14px;transform:translateY(4px);}
+    .streak{margin-left:auto;font-size:12px;padding:5px 10px;}
+    nav{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:60;background:var(--paper);border-top:1px solid var(--line);display:flex;justify-content:space-around;gap:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -2px 10px rgba(34,28,20,.06);}
+    nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;padding:6px 2px;border-radius:10px;}
+    nav button .ico{display:block;font-size:19px;}
+    nav button.active{background:var(--ink);color:var(--cream);}
+    body{padding-bottom:72px;}
+    .wrap{padding:0 14px 110px;}
+    .toast{bottom:92px;}
+    .hero{padding:36px 0 18px;}
+    .sub{font-size:16.5px;margin:16px 0 20px;}
+    .hero .btn{width:100%;justify-content:center;margin:0 0 10px 0 !important;}
+    .how{margin:34px 0 8px;gap:12px;}
+    .card,.story,.tier,.q{padding:18px;}
+    .promptbox,.tryit{padding:16px;}
+    .strip{padding:22px;margin-top:34px;}
+    .strip h3{font-size:18px;}
+    .day-head{padding:26px 0 4px;}
+    .skill-line{font-size:13px;}
+    .personas,.daychips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;}
+    .personas::-webkit-scrollbar,.daychips::-webkit-scrollbar{display:none;}
+    .persona,.daychip{flex:0 0 auto;font-size:13px;padding:8px 13px;}
+    .doneRow .btn{width:100%;justify-content:center;}
+    .duel-card{padding:16px;}
+    .duel-card pre{font-size:12.5px;}
+    .msg{max-width:90%;}
+    .chat-input .btn{padding:12px 16px;}
+    .portfolio{padding:20px;}
+    .modal{padding:24px 20px;}
+    .memb-hero{padding:30px 0 4px;}
+    .wl{flex-direction:column;}
+    .wl input{min-width:0;width:100%;}
+    .wl .btn{width:100%;}
+    footer{padding-bottom:14px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="onboard">
+  <div class="modal">
+    <span class="kicker">Welcome · one question, under a minute</span>
+    <h2 class="display">Which sounds most like you?</h2>
+    <p>Every daily mission rewrites itself for your life — your examples, your situations, your words. You can switch anytime.</p>
+    <div class="plist" id="onboardList"></div>
+    <button class="skip" onclick="closeOnboard(null)">I'm just exploring — show me everything</button>
+  </div>
+</div>
+
+<header>
+  <div class="bar">
+    <div class="logo" onclick="go('home')">
+      <span class="mark">5</span>
+      <span>
+        <span class="name display">The Five-Minute Win</span><br>
+        <span class="dom">fiveminutewin.com</span>
+      </span>
+    </div>
+    <nav>
+      <button id="nav-home" class="active" onclick="go('home')"><span class="ico">🏠</span><span>Home</span></button>
+      <button id="nav-mission" onclick="go('mission')"><span class="ico">🎯</span><span>Mission</span></button>
+      <button id="nav-helper" onclick="go('helper')"><span class="ico">🛟</span><span>My Problem</span></button>
+      <button id="nav-challenge" onclick="go('challenge')"><span class="ico">🧠</span><span>Challenge</span></button>
+      <button id="nav-member" onclick="go('member')"><span class="ico">⭐</span><span>Members</span></button>
+    </nav>
+    <div class="streak" id="streakChip">🔥 Start your streak</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section id="home" class="screen on">
+    <div class="hero">
+      <span class="kicker">No jargon. No lectures. No experience needed.</span>
+      <h1 class="display">One real-life <em>win</em> with AI.<br>Five minutes here. A win out there.</h1>
+      <p class="sub">Most sites teach you <b>about</b> AI. Here, five minutes gets you <b>armed</b> — the exact email, the phone script, the week's plan, ready in your hand. Then you make your move in real life. That's the win, and it's yours.</p>
+      <button class="btn" onclick="go('mission')">Start today's mission →</button>
+      <button class="btn ghost" style="margin-left:10px" onclick="go('helper')">🛟 I have my own problem</button>
+      <button class="btn ghost" style="margin-left:10px" onclick="go('challenge')">Play today's challenge</button>
+    </div>
+    <div class="how">
+      <div class="card">
+        <div class="num">1</div>
+        <h3 class="display">Get today's mission</h3>
+        <p>A tiny, real-life task — written for <i>your</i> life. Pick who you are once (parent, shop owner, office worker, job-seeker, retiree) and every example fits you from then on.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h3 class="display">Five minutes: get armed</h3>
+        <p>Fill in a couple of blanks and generate your draft <i>right on this page</i> — then refine it with one tap. Our promise: this part never takes more than five minutes. You leave holding the result.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3 class="display">Make your move, log the win</h3>
+        <p>Send it. Make the call. Cook the plan. That part happens in your life, on your clock — and when it's done, log the win, keep your streak, and play the 30-second challenge to lock the skill in.</p>
+      </div>
+    </div>
+    <div class="strip">
+      <h3 class="display">"I don't need to understand AI. I need it to write my landlord a firm-but-polite email by 6pm."</h3>
+      <button class="btn small" onclick="go('mission')">That's exactly what we do →</button>
+    </div>
+  </section>
+
+  <section id="mission" class="screen">
+    <div id="missionLoad" class="loading">Loading today's mission…</div>
+    <div id="missionBody" style="display:none">
+      <div class="day-head">
+        <div>
+          <div class="day-tag" id="mTag"></div>
+          <h2 class="display" id="mTitle"></h2>
+          <div class="skill-line" id="mSkill"></div>
+          <div class="note-line" id="mNote" style="display:none"></div>
+        </div>
+        <div class="pill">⏱ 5 minutes here · then your move</div>
+      </div>
+      <div class="daychips" id="dayChips"></div>
+      <div class="daychips-note">Beta preview: browse this week's missions. From launch, one new mission appears here each morning.</div>
+      <div class="personas" id="personaRow"></div>
+      <p class="persona-note">Showing examples for: <b id="personaLabel"></b> — switch anytime, the whole mission rewrites itself.</p>
+      <div class="mission-grid">
+        <div class="story">
+          <h3 class="display" id="storyTitle"></h3>
+          <p id="storyBody"></p>
+          <div class="fills" id="fillsWrap">
+            <h4>Make it yours — fill in the blanks</h4>
+            <div id="fillFields"></div>
+          </div>
+        </div>
+        <div>
+          <div class="promptbox">
+            <div class="label">Your prompt — assembling as you type</div>
+            <button class="copybtn" onclick="copyPrompt()">Copy</button>
+            <pre id="promptText"></pre>
+          </div>
+          <div class="why"><b>Why this works:</b> <span id="whyText"></span></div>
+          <div class="tryit">
+            <div class="t-head">
+              <h4 class="display">✨ Generate my draft right here</h4>
+              <span class="t-note">Free · no account needed</span>
+            </div>
+            <button class="btn small" id="genBtn" onclick="generate(null)">Generate my draft</button>
+            <div class="genout" id="genOut"></div>
+            <div class="refines" id="refineRow">
+              <span>Not quite right?</span>
+              <button class="refinebtn" onclick="generate('warmer and more personal')">Warmer</button>
+              <button class="refinebtn" onclick="generate('about 30% shorter')">Shorter</button>
+              <button class="refinebtn" onclick="generate('firmer and more direct')">Firmer</button>
+            </div>
+            <div class="capnote" id="capNote">10 free drafts a day. Or copy the prompt into any AI chat — free forever.</div>
+          </div>
+        </div>
+      </div>
+      <div class="doneRow">
+        <button class="btn green" onclick="logWin()">✓ I made my move — log the win</button>
+        <button class="btn ghost small" onclick="go('challenge')">Skip to the challenge</button>
+      </div>
+      <div class="winbanner" id="winBanner">
+        <h3 class="display" id="winTitle"></h3>
+        <p>Your streak is now <b><span id="winStreak"></span> day(s)</b>. One last thing — this is what builds your story:</p>
+        <div class="reflect">
+          <input type="text" id="reflectInput" maxlength="140" placeholder="In one line: what happened? (e.g., 'Sent it. Reply came in 2 hours.')">
+          <button class="btn small green" onclick="saveReflection()">Save to my wins</button>
+        </div>
+        <div class="saved-reflection" id="savedReflection"></div>
+        <br><button class="btn small" onclick="go('challenge')">Now lock it in — play today's challenge →</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="helper" class="screen">
+    <div class="day-head">
+      <div>
+        <div class="day-tag">Bring your own problem</div>
+        <h2 class="display">What do you need to get done?</h2>
+        <div class="skill-line">I'll ask a question or two, then hand you the result — and the prompt to get it yourself next time.</div>
+      </div>
+    </div>
+    <p class="sub" style="font-size:16px;margin-top:14px">An awkward email, a phone script, a plan, a confusing letter to decode, a conversation to practice. One thing at a time, real life only. <b>Leave out account numbers and personal details</b> — drafts never need them.</p>
+    <div class="chips-row" id="helperChips"></div>
+    <div class="chatbox" id="chatBox"></div>
+    <div class="chat-input">
+      <textarea id="helperInput" rows="2" placeholder="Describe it in a sentence — e.g. 'I need to ask my neighbor to stop parking in my spot, nicely.'"></textarea>
+      <button class="btn small" id="helperSend" onclick="helperSend()">Send</button>
+    </div>
+    <div class="capnote" id="helperCap" style="margin-top:8px">Each reply uses one of your 10 free daily AI turns.</div>
+    <div class="doneRow" id="helperWinRow" style="display:none">
+      <button class="btn green" onclick="logHelperWin()">✓ This solved it — log my win</button>
+      <button class="btn ghost small" onclick="helperReset()">Start a new problem</button>
+    </div>
+    <div class="winbanner" id="helperWinBanner">
+      <h3 class="display">Win logged — your problem, your move, your result. 🎉</h3>
+      <p>Your streak is now <b><span id="helperWinStreak"></span> day(s)</b>. One line for your story:</p>
+      <div class="reflect">
+        <input type="text" id="helperReflect" maxlength="140" placeholder="What happened? (e.g., 'Sent the neighbor note. Peace restored.')">
+        <button class="btn small green" onclick="saveHelperReflection()">Save to my wins</button>
+      </div>
+      <div class="saved-reflection" id="helperSaved"></div>
+    </div>
+  </section>
+
+  <section id="challenge" class="screen">
+    <div class="day-head">
+      <div>
+        <div class="day-tag">The Daily Challenge · under a minute</div>
+        <h2 class="display">Which prompt wins?</h2>
+      </div>
+      <div class="pill">Round <span id="roundNum">1</span> of <span id="roundTotal">4</span></div>
+    </div>
+    <p class="sub" style="font-size:17px;margin-top:14px">Two people asked AI for help with the same thing. One got gold, one got mush. <b>Tap the one you think won</b> — then see why. Rounds get sneakier as you go.</p>
+    <div id="duelWrap"><div class="loading">Loading today's challenge…</div></div>
+    <div class="scorebar">
+      <span class="pill">Today's score: <span id="score">0</span> / <span id="scoreTotal">4</span></span>
+    </div>
+    <div class="sharecard" id="shareCard">
+      <button class="copybtn" onclick="copyShare()">Copy</button>
+      <span id="shareText"></span>
+    </div>
+  </section>
+
+  <section id="member" class="screen">
+    <div class="memb-hero">
+      <span class="kicker">Membership</span>
+      <h2 class="display">Free members get wins.<br>Members get <em style="font-style:normal;color:var(--coral)">proof</em>.</h2>
+      <p class="sub" style="margin-top:16px">The daily mission is free, forever — that's a promise. Membership isn't locked content. It's turning your wins into something you can show the world.</p>
+    </div>
+    <div class="tiers">
+      <div class="tier">
+        <h3 class="display">Everyone</h3>
+        <div class="price">$0</div>
+        <div class="per">free forever</div>
+        <ul>
+          <li>The daily mission, every day, all five personas</li>
+          <li>Generate your drafts right on the page (10 a day)</li>
+          <li>The daily challenge game &amp; streaks</li>
+          <li>The daily mission in your inbox each morning</li>
+        </ul>
+      </div>
+      <div class="tier pro">
+        <div class="badge-top">FOUNDING MEMBERS</div>
+        <h3 class="display">The Winner's Circle</h3>
+        <div class="price">$5</div>
+        <div class="per">per month · founding members keep this price for life</div>
+        <ul>
+          <li><b>Your Life Portfolio</b> — every win and reflection, saved, searchable, yours to keep</li>
+          <li><b>Proof that fits your life</b> — the right proof for <i>you</i>, not one certificate for everyone</li>
+          <li><b>Submit your real problem</b> → we turn it into a mission, credited to you by name</li>
+          <li>Unlimited on-page drafts with our best AI, no daily cap</li>
+        </ul>
+        <div class="wl">
+          <input type="email" id="wlEmail" placeholder="your@email.com" autocomplete="email" autocapitalize="off" spellcheck="false">
+          <button class="btn small" onclick="joinWaitlist()">Join the Founding Member waitlist</button>
+        </div>
+        <div class="wl-result" id="wlResult"></div>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px">First 100 members get a numbered Founding Member badge — forever. No payment now; we'll email you when doors open.</p>
+      </div>
+    </div>
+    <h3 class="display" style="margin-top:44px;font-size:22px">Proof that fits your life</h3>
+    <p style="color:var(--ink-soft);font-size:15px;margin-top:6px;max-width:640px">After 30 logged wins, you choose the proof that matters in <i>your</i> world:</p>
+    <div class="proofgrid">
+      <div class="proof"><b>💼 Job-seeker</b><span>A shareable portfolio link for your résumé: 30 real tasks you completed with AI — evidence, not claims.</span></div>
+      <div class="proof"><b>🏪 Small-business owner</b><span>A printable "This business runs smart" window badge and web sticker.</span></div>
+      <div class="proof"><b>🖥️ Office worker</b><span>An "AI-Ready" one-pager of your 30 wins — the thing you bring up in your next review.</span></div>
+      <div class="proof"><b>👨‍👧 Parent &amp; 🌻 Retiree</b><span>Milestone celebrations and a family-shareable wins page. Just your story, well told.</span></div>
+    </div>
+    <div class="portfolio">
+      <h3 class="display">Your wins so far</h3>
+      <p class="p-sub">Wins you log are saved on this device for now — members keep them forever, on every device.</p>
+      <div class="wins" id="portfolioWins"></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>The Five-Minute Win · fiveminutewin.com · Five minutes here. A win out there. · <span id="betaTag">Beta</span></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ The Five-Minute Win — app v0.2 ============ */
+var PERSONAS = [
+  {id:'shop',    name:'🏪 Small-business owner', short:'Small-business owner', onboard:'🏪 I run a small business'},
+  {id:'parent',  name:'👨‍👧 Parent',             short:'Parent',               onboard:'👨‍👧 I\'m a parent running a family'},
+  {id:'office',  name:'🖥️ Office worker',        short:'Office worker',        onboard:'🖥️ I work a regular job'},
+  {id:'job',     name:'💼 Job-seeker',           short:'Job-seeker',           onboard:'💼 I\'m looking for a job'},
+  {id:'retiree', name:'🌻 Retiree',              short:'Retiree',              onboard:'🌻 I\'m retired (or nearly)'}
+];
+var DAY_LABELS = {1:'Words',2:'Money',3:'Time',4:'Work',5:'Home',6:'Paperwork',7:'Fun'};
+
+var store = {
+  get: function(k,d){ try{ var v=localStorage.getItem('fmw_'+k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set: function(k,v){ try{ localStorage.setItem('fmw_'+k, JSON.stringify(v)); }catch(e){} }
+};
+var personaId = store.get('persona', null);
+var mission = null;
+var currentDraft = '';
+var answers = {};
+var challenge = null, round = 0, score = 0, results = [];
+
+function beacon(name, meta){
+  try{ navigator.sendBeacon('/api/event', new Blob([JSON.stringify({name:name, meta:meta||null})], {type:'application/json'})); }catch(e){}
+}
+
+/* ---------- navigation ---------- */
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on')});
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('nav button').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('nav-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='challenge' && !challenge){loadChallenge();}
+  if(id==='member'){renderPortfolio();}
+}
+
+/* ---------- onboarding ---------- */
+function buildOnboard(){
+  var list = document.getElementById('onboardList');
+  PERSONAS.forEach(function(p){
+    var b = document.createElement('button');
+    b.textContent = p.onboard;
+    b.onclick = function(){closeOnboard(p.id)};
+    list.appendChild(b);
+  });
+  if(!personaId){document.getElementById('onboard').classList.add('on');}
+}
+function closeOnboard(id){
+  if(id){personaId = id; store.set('persona', id);}
+  else if(!personaId){personaId = 'parent';}
+  document.getElementById('onboard').classList.remove('on');
+  if(mission) renderMission();
+  if(id){toast('Got it — everything is now written for a '+personaFor(id).short.toLowerCase()+'. Switch anytime.');}
+}
+function personaFor(id){for(var i=0;i<PERSONAS.length;i++){if(PERSONAS[i].id===id)return PERSONAS[i];}return PERSONAS[0];}
+
+/* ---------- mission ---------- */
+async function loadMission(id){
+  var url = id ? '/api/mission/'+id : '/api/mission/today';
+  try{
+    var res = await fetch(url);
+    mission = await res.json();
+    if(!personaId) personaId = 'parent';
+    document.getElementById('missionLoad').style.display='none';
+    document.getElementById('missionBody').style.display='block';
+    renderMission();
+  }catch(e){
+    document.getElementById('missionLoad').textContent = 'Could not load the mission — check your connection and refresh.';
+  }
+}
+function contentFor(){
+  var c = null;
+  (mission.personas||[]).forEach(function(p){ if(p.persona===personaId) c=p; });
+  return c || mission.personas[0];
+}
+function renderMission(){
+  var c = contentFor();
+  answers = {}; currentDraft = '';
+  document.getElementById('mTag').textContent = 'Mission · Day '+mission.id+' · '+(DAY_LABELS[mission.id]||mission.domain);
+  document.getElementById('mTitle').textContent = mission.title;
+  document.getElementById('mSkill').textContent = mission.skill;
+  var noteEl = document.getElementById('mNote');
+  if(mission.note){noteEl.textContent = 'ℹ️ ' + mission.note; noteEl.style.display='block';}else{noteEl.style.display='none';}
+
+  var chips = document.getElementById('dayChips');
+  chips.innerHTML = '';
+  for(var d=1; d<=7; d++){
+    (function(d){
+      var b = document.createElement('button');
+      b.className = 'daychip' + (d===mission.id?' sel':'');
+      b.textContent = 'Day '+d+' · '+DAY_LABELS[d];
+      b.onclick = function(){loadMission(d);};
+      chips.appendChild(b);
+    })(d);
+  }
+  var row = document.getElementById('personaRow');
+  row.innerHTML = '';
+  PERSONAS.forEach(function(p){
+    var b = document.createElement('button');
+    b.className = 'persona' + (p.id===personaId?' sel':'');
+    b.textContent = p.name;
+    b.onclick = function(){personaId=p.id; store.set('persona', p.id); renderMission();};
+    row.appendChild(b);
+  });
+  document.getElementById('personaLabel').textContent = personaFor(personaId).short;
+  document.getElementById('storyTitle').textContent = c.story_title;
+  document.getElementById('storyBody').textContent = c.story;
+  document.getElementById('whyText').textContent = c.why;
+  buildFills(c.prompt);
+  renderPrompt(c.prompt);
+  var out = document.getElementById('genOut');
+  out.className = 'genout'; out.textContent = '';
+  document.getElementById('refineRow').classList.remove('show');
+  document.getElementById('winBanner').classList.remove('show');
+  document.getElementById('savedReflection').classList.remove('show');
+  document.getElementById('reflectInput').value='';
+  beacon('visit','mission'+mission.id);
+}
+function placeholders(prompt){
+  var seen = {}, out = [];
+  (prompt.match(/\[([^\]]+)\]/g)||[]).forEach(function(m){
+    var key = m.slice(1,-1);
+    if(!seen[key]){seen[key]=true; out.push(key);}
+  });
+  return out;
+}
+function buildFills(prompt){
+  var wrap = document.getElementById('fillFields');
+  wrap.innerHTML = '';
+  var ph = placeholders(prompt);
+  if(!ph.length){document.getElementById('fillsWrap').style.display='none'; return;}
+  document.getElementById('fillsWrap').style.display='block';
+  ph.forEach(function(key){
+    var div = document.createElement('div');
+    div.className = 'fill';
+    var label = document.createElement('label');
+    label.textContent = key.charAt(0).toUpperCase()+key.slice(1);
+    var long = /describe|paste|list|going on|situation|understanding/.test(key);
+    var input = document.createElement(long ? 'textarea' : 'input');
+    input.placeholder = 'Type it here…';
+    input.oninput = function(){
+      if(input.value.trim()) answers[key]=input.value.trim(); else delete answers[key];
+      renderPrompt(contentFor().prompt);
+    };
+    div.appendChild(label); div.appendChild(input); wrap.appendChild(div);
+  });
+}
+function escHtml(s){return String(s).replace(/[&<>]/g, function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[ch];});}
+function renderPrompt(prompt){
+  var html = escHtml(prompt);
+  html = html.replace(/\[([^\]]+)\]/g, function(m, key){
+    if(answers[key]){ return '<span class="flld">'+escHtml(answers[key])+'</span>'; }
+    return m;
+  });
+  document.getElementById('promptText').innerHTML = html;
+}
+function filledPrompt(){
+  var p = contentFor().prompt;
+  Object.keys(answers).forEach(function(k){ p = p.split('['+k+']').join(answers[k]); });
+  return p;
+}
+function copyPrompt(){
+  if(navigator.clipboard){navigator.clipboard.writeText(filledPrompt());}
+  beacon('copy_prompt', String(mission.id));
+  toast('Prompt copied — paste it into any AI chat');
+}
+
+/* ---------- generation ---------- */
+async function generate(refine){
+  var btn = document.getElementById('genBtn');
+  var out = document.getElementById('genOut');
+  btn.disabled = true;
+  out.className = 'genout show';
+  out.textContent = refine ? '⏳ Refining…' : '⏳ Writing your draft…';
+  try{
+    var body = {missionId: mission.id, persona: personaId, answers: answers};
+    if(refine && currentDraft){ body.refine = refine; body.draft = currentDraft; }
+    var res = await fetch('/api/generate', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body)});
+    var data = await res.json();
+    if(res.ok && data.draft){
+      currentDraft = data.draft;
+      out.textContent = data.draft;
+      document.getElementById('refineRow').classList.add('show');
+      if(typeof data.remaining === 'number'){
+        document.getElementById('capNote').textContent = data.remaining + ' free drafts left today. Or copy the prompt into any AI chat — free forever.';
+      }
+    } else {
+      out.className = 'genout show err';
+      out.textContent = data.message || 'Generation hit a snag — the copy-paste prompt above works in any AI chat, free.';
+    }
+  }catch(e){
+    out.className = 'genout show err';
+    out.textContent = 'Connection hiccup — the copy-paste prompt above works in any AI chat, free.';
+  }
+  btn.disabled = false;
+}
+
+/* ---------- wins & streaks ---------- */
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function setStreakChip(n){
+  document.getElementById('streakChip').textContent = n > 0 ? '🔥 '+n+'-day streak' : '🔥 Start your streak';
+}
+function bumpStreak(){
+  var streak = store.get('streak', 0);
+  var last = store.get('lastWinDate', null);
+  var t = todayStr();
+  if(last !== t){
+    var y = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    streak = (last === y) ? streak+1 : 1;
+    store.set('streak', streak); store.set('lastWinDate', t);
+  }
+  setStreakChip(streak);
+  return streak;
+}
+function logWin(){
+  var streak = bumpStreak();
+  document.getElementById('winStreak').textContent = streak;
+  document.getElementById('winTitle').textContent = mission.win_message;
+  document.getElementById('winBanner').classList.add('show');
+  document.getElementById('winBanner').scrollIntoView({behavior:'smooth',block:'center'});
+  beacon('win', String(mission.id));
+  toast('🔥 Streak: '+streak+' day'+(streak===1?'':'s'));
+}
+function saveReflection(){
+  var v = document.getElementById('reflectInput').value.trim();
+  if(!v){toast('One line is all it takes — what happened?');return;}
+  var wins = store.get('wins', []);
+  wins.unshift({missionId: mission.id, domain: DAY_LABELS[mission.id]||mission.domain, text: v, at: todayStr()});
+  store.set('wins', wins.slice(0,200));
+  var s = document.getElementById('savedReflection');
+  s.textContent = '📔 Saved to your wins: “'+v+'”';
+  s.classList.add('show');
+  toast('Saved — see your wins on the Membership page');
+}
+function renderPortfolio(){
+  var wrap = document.getElementById('portfolioWins');
+  var wins = store.get('wins', []);
+  wrap.innerHTML = '';
+  if(!wins.length){
+    wrap.innerHTML = '<div class="win-item"><b>Nothing yet</b>Your first logged win will appear here — today\'s mission is a good place to start.</div>';
+    return;
+  }
+  wins.slice(0,12).forEach(function(w){
+    var div = document.createElement('div');
+    div.className = 'win-item';
+    var b = document.createElement('b');
+    b.textContent = 'Win · '+w.domain+' · '+w.at;
+    div.appendChild(b);
+    div.appendChild(document.createTextNode(w.text));
+    wrap.appendChild(div);
+  });
+}
+
+/* ---------- challenge ---------- */
+async function loadChallenge(){
+  try{
+    var mid = mission ? mission.id : null;
+    if(!mid){ var r = await fetch('/api/mission/today'); mid = (await r.json()).id; }
+    var res = await fetch('/api/challenge/'+mid);
+    challenge = await res.json();
+    challenge.missionId = mid;
+    round = 1; score = 0; results = [];
+    document.getElementById('score').textContent = 0;
+    document.getElementById('roundTotal').textContent = challenge.rounds.length;
+    document.getElementById('scoreTotal').textContent = challenge.rounds.length;
+    document.getElementById('shareCard').classList.remove('show');
+    drawDuel();
+  }catch(e){
+    document.getElementById('duelWrap').innerHTML = '<div class="loading">Could not load the challenge — refresh to retry.</div>';
+  }
+}
+function drawDuel(){
+  var r = challenge.rounds[round-1];
+  document.getElementById('roundNum').textContent = round;
+  var order = (round % 2 === 1) ? ['a','b'] : ['b','a'];
+  var html = '<p style="font-weight:700;margin-top:22px">'+escHtml(r.task)+'</p><div class="duel">';
+  order.forEach(function(k,i){
+    html += '<div class="duel-card" id="card-'+k+'" onclick="pick(\''+k+'\')">'+
+            '<div class="tag">Prompt '+(i===0?'One':'Two')+'</div><pre>'+escHtml(k==='a'?r.prompt_a:r.prompt_b)+'</pre></div>';
+  });
+  html += '</div><div class="verdict" id="verdict"><h3 class="display" id="vTitle"></h3><p id="vBody"></p><br><button class="btn small" id="nextBtn"></button></div>';
+  document.getElementById('duelWrap').innerHTML = html;
+}
+function pick(k){
+  var r = challenge.rounds[round-1];
+  if(document.getElementById('verdict').classList.contains('show')) return;
+  var correct = (k === r.winner);
+  if(correct) score++;
+  results.push(correct);
+  document.getElementById('score').textContent = score;
+  var winCard = document.getElementById('card-'+r.winner);
+  var loseCard = document.getElementById('card-'+(r.winner==='a'?'b':'a'));
+  winCard.classList.add('win'); loseCard.classList.add('lose');
+  winCard.insertAdjacentHTML('beforeend','<div class="resmark good">✓</div>');
+  loseCard.insertAdjacentHTML('beforeend','<div class="resmark bad">✗</div>');
+  document.getElementById('vTitle').textContent = correct ? "✓ You spotted it!" : "✗ Sneaky one — here's the tell:";
+  document.getElementById('vBody').textContent = r.verdict;
+  var btn = document.getElementById('nextBtn');
+  if(round < challenge.rounds.length){
+    btn.textContent = "Next round →";
+    btn.onclick = function(){round++;drawDuel();};
+  } else {
+    btn.textContent = "See my result";
+    btn.onclick = finishChallenge;
+  }
+  document.getElementById('verdict').classList.add('show');
+}
+function finishChallenge(){
+  var n = challenge.rounds.length;
+  var streak = store.get('streak', 0);
+  var msg = score === n ? "Perfect "+score+"/"+n+"! You officially have better prompt instincts than most of the internet. 🏆"
+          : score >= n/2 ? score+"/"+n+" — solid. The tells get easier to spot every day you play."
+          : score+"/"+n+" today — which means tomorrow you'll never fall for these again.";
+  var squares = results.map(function(c){return c?'🟩':'⬛'}).join('');
+  document.getElementById('duelWrap').innerHTML =
+    '<div class="winbanner show" style="margin-top:26px"><h3 class="display">'+escHtml(msg)+'</h3>'+
+    '<p>New challenge tomorrow with the daily mission.'+(streak?' Streak safe: 🔥 '+streak+' days.':'')+'</p></div>';
+  document.getElementById('shareText').textContent = 'The Five-Minute Win — Challenge, Day '+challenge.missionId+'\n'+squares+'  '+score+'/'+n+(streak?'\n🔥 '+streak+'-day streak':'')+'\nfiveminutewin.com';
+  document.getElementById('shareCard').classList.add('show');
+  beacon('challenge_done', challenge.missionId+':'+score);
+  challenge = null;
+}
+function copyShare(){
+  if(navigator.clipboard){navigator.clipboard.writeText(document.getElementById('shareText').textContent);}
+  toast('Copied — paste it anywhere ✨');
+}
+
+/* ---------- waitlist ---------- */
+async function joinWaitlist(){
+  var email = document.getElementById('wlEmail').value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast('That email doesn\'t look right — one more try?');return;}
+  try{
+    var res = await fetch('/api/waitlist', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({email:email})});
+    var data = await res.json();
+    if(res.ok){
+      var el = document.getElementById('wlResult');
+      el.textContent = data.already ? '✓ You\'re already on the list — Founding Member #'+data.position+'.' : '🎉 You\'re Founding Member #'+data.position+' on the waitlist. We\'ll email you when doors open.';
+      el.classList.add('show');
+    } else { toast('Hmm, that didn\'t go through — try again?'); }
+  }catch(e){ toast('Connection hiccup — try again in a moment.'); }
+}
+
+/* ---------- guided helper ---------- */
+var helperMsgs = [], helperBusy = false;
+var HELPER_EXAMPLES = [
+  "Help me reply to a message I've been avoiding",
+  "I need a phone script to lower a bill",
+  "Plan my week's dinners from what I have",
+  "Decode a confusing letter for me",
+  "Help me practice a hard conversation"
+];
+function buildHelperChips(){
+  var row = document.getElementById('helperChips');
+  HELPER_EXAMPLES.forEach(function(ex){
+    var b = document.createElement('button');
+    b.className = 'chip-ex';
+    b.textContent = ex;
+    b.onclick = function(){document.getElementById('helperInput').value = ex + ': '; document.getElementById('helperInput').focus();};
+    row.appendChild(b);
+  });
+}
+function addMsg(role, text){
+  var box = document.getElementById('chatBox');
+  var div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.textContent = text;
+  box.appendChild(div);
+  div.scrollIntoView({behavior:'smooth', block:'end'});
+  return div;
+}
+function addLearnBox(promptText){
+  var box = document.getElementById('chatBox');
+  var div = document.createElement('div');
+  div.className = 'learnbox';
+  var title = document.createElement('div');
+  title.className = 'lb-title';
+  title.textContent = '📚 Next time, one prompt does it — save this';
+  var pre = document.createElement('pre');
+  pre.textContent = promptText;
+  var btn = document.createElement('button');
+  btn.className = 'copybtn';
+  btn.textContent = 'Copy';
+  btn.onclick = function(){ if(navigator.clipboard){navigator.clipboard.writeText(promptText);} toast('Saved to clipboard — that prompt is yours now'); };
+  div.appendChild(btn); div.appendChild(title); div.appendChild(pre);
+  box.appendChild(div);
+  div.scrollIntoView({behavior:'smooth', block:'end'});
+}
+async function helperSend(){
+  if(helperBusy) return;
+  var input = document.getElementById('helperInput');
+  var text = input.value.trim();
+  if(!text){ input.focus(); return; }
+  helperBusy = true;
+  document.getElementById('helperSend').disabled = true;
+  input.value = '';
+  addMsg('user', text);
+  helperMsgs.push({role:'user', content:text});
+  var typing = addMsg('ai typing', 'thinking…');
+  try{
+    var res = await fetch('/api/helper', {method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({messages: helperMsgs, persona: personaFor(personaId).short})});
+    var data = await res.json();
+    typing.remove();
+    if(res.ok && data.reply){
+      helperMsgs.push({role:'assistant', content:data.reply});
+      var parts = data.reply.split('---LEARN---');
+      addMsg('ai', parts[0].trim());
+      if(parts.length > 1 && parts[1].trim()){
+        addLearnBox(parts[1].trim());
+        document.getElementById('helperWinRow').style.display = 'flex';
+      }
+      if(typeof data.remaining === 'number'){
+        document.getElementById('helperCap').textContent = data.remaining + ' free AI turns left today.';
+      }
+    } else {
+      addMsg('ai', data.message || 'That did not go through — try once more?');
+    }
+  }catch(e){
+    typing.remove();
+    addMsg('ai', 'Connection hiccup — try sending that again.');
+  }
+  helperBusy = false;
+  document.getElementById('helperSend').disabled = false;
+}
+document.getElementById('helperInput').addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); helperSend(); }
+});
+function helperReset(){
+  helperMsgs = [];
+  document.getElementById('chatBox').innerHTML = '';
+  document.getElementById('helperWinRow').style.display = 'none';
+  document.getElementById('helperWinBanner').classList.remove('show');
+  document.getElementById('helperSaved').classList.remove('show');
+  document.getElementById('helperReflect').value = '';
+  document.getElementById('helperInput').focus();
+}
+function logHelperWin(){
+  var streak = bumpStreak();
+  document.getElementById('helperWinStreak').textContent = streak;
+  document.getElementById('helperWinBanner').classList.add('show');
+  document.getElementById('helperWinBanner').scrollIntoView({behavior:'smooth', block:'center'});
+  beacon('win', 'helper');
+  toast('🔥 Streak: '+streak+' day'+(streak===1?'':'s'));
+}
+function saveHelperReflection(){
+  var v = document.getElementById('helperReflect').value.trim();
+  if(!v){toast('One line is all it takes — what happened?');return;}
+  var wins = store.get('wins', []);
+  wins.unshift({missionId: 0, domain: 'My Problem', text: v, at: todayStr()});
+  store.set('wins', wins.slice(0,200));
+  var s = document.getElementById('helperSaved');
+  s.textContent = '📔 Saved to your wins: “'+v+'”';
+  s.classList.add('show');
+  toast('Saved — see your wins on the Members page');
+}
+
+/* ---------- toast ---------- */
+var toastTimer;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){t.classList.remove('show')},3000);
+}
+
+/* ---------- boot ---------- */
+setStreakChip(store.get('streak', 0));
+buildOnboard();
+buildHelperChips();
+loadMission(null);
+beacon('visit','home');
+</script>
+</body>
+</html>
