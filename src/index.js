@@ -1,4 +1,4 @@
-// The Five-Minute Win — Worker API v0.1
+// The Five-Minute Win, Worker API v0.1
 // Endpoints: /api/mission/today, /api/mission/:id, /api/challenge/:id,
 //            /api/generate (capped), /api/waitlist, /api/event
 import { Hono } from 'hono';
@@ -19,7 +19,7 @@ app.use('*', async (c, next) => {
 /* ---------- helpers ---------- */
 
 async function visitorKey(c) {
-  // Privacy: we never store raw IPs — only a salted hash that resets meaning daily.
+  // Privacy: we never store raw IPs, only a salted hash that resets meaning daily.
   const ip = c.req.header('cf-connecting-ip') || 'local';
   const salt = c.env.VISITOR_SALT || 'dev-salt';
   const data = new TextEncoder().encode(`${salt}:${ip}`);
@@ -121,7 +121,7 @@ app.post('/api/generate', async (c) => {
   const row = await db.prepare('SELECT count FROM gen_usage WHERE visitor_key = ? AND day = ?').bind(key, day).first();
   const used = row?.count ?? 0;
   if (used >= cap) {
-    return c.json({ error: 'cap', message: `You've used today's ${cap} free drafts. Members generate without limits — or copy the prompt into any AI chat, free forever.` }, 429);
+    return c.json({ error: 'cap', message: `You've used today's ${cap} free drafts. Members generate without limits, or copy the prompt into any AI chat, free forever.` }, 429);
   }
 
   const { missionId, persona, answers, refine, draft } = await c.req.json().catch(() => ({}));
@@ -138,7 +138,7 @@ app.post('/api/generate', async (c) => {
   }
 
   const SYSTEM =
-    'You help non-technical people finish small real-life tasks. Reply with ONLY the finished draft/script/plan the user asked for — warm, plain language, no preamble, no explanations, no markdown headers. If key details are missing, make reasonable neutral choices and mark them [like this] so the user can adjust.';
+    'You help non-technical people finish small real-life tasks. Reply with ONLY the finished draft/script/plan the user asked for, warm, plain language, no preamble, no explanations, no markdown headers. If key details are missing, make reasonable neutral choices and mark them [like this] so the user can adjust.';
 
   // Refine mode: revise the previous draft instead of starting over.
   const userMessage = refine && draft
@@ -146,7 +146,7 @@ app.post('/api/generate', async (c) => {
     : filled;
 
   const text = await generateText(c.env, SYSTEM, userMessage);
-  if (text === null) return c.json({ error: 'llm_error', message: 'Generation is having a moment — the copy-paste prompt below works in any AI chat, free.' }, 502);
+  if (text === null) return c.json({ error: 'llm_error', message: 'Generation is having a moment. The copy-paste prompt below works in any AI chat, free.' }, 502);
 
   await db
     .prepare('INSERT INTO gen_usage (visitor_key, day, count) VALUES (?, ?, 1) ON CONFLICT(visitor_key, day) DO UPDATE SET count = count + 1')
@@ -161,13 +161,13 @@ app.post('/api/generate', async (c) => {
 const HELPER_SYSTEM = `You are the helper on The Five-Minute Win, a site that helps non-technical people finish small real-life tasks with AI: difficult emails and messages, phone scripts, plans (meals, errands, events), decoding confusing letters and documents, practicing conversations.
 
 Your method:
-1. If the user's request is missing details you genuinely need, ask ONE short, friendly clarifying question at a time — at most 3 questions in the whole conversation. Never ask for details you don't need.
-2. Then deliver the finished result: the draft, script, or plan itself — warm, plain language, no jargon, no preamble, no markdown headers.
+1. If the user's request is missing details you genuinely need, ask ONE short, friendly clarifying question at a time, at most 3 questions in the whole conversation. Never ask for details you don't need.
+2. Then deliver the finished result: the draft, script, or plan itself, warm, plain language, no jargon, no preamble, no markdown headers.
 3. Immediately after delivering the final result, add a line containing exactly ---LEARN--- and then a single reusable prompt the user could paste into any AI chat next time to get this kind of result in one go. Use [brackets] for the parts that would change. Nothing after the reusable prompt.
 
 Rules:
 - Stay in scope: small personal real-life tasks only. If asked for essays, homework, code, professional medical/legal/financial advice, or anything harmful, decline in one kind sentence and suggest something you CAN help with. For medical/legal/financial documents you may explain in plain language and help draft questions for the professional, but say clearly that the professional's advice is what counts.
-- Privacy: never ask for account numbers, ID numbers, addresses, or passwords. If the user pastes any, tell them to remove such details — they are never needed for a draft.
+- Privacy: never ask for account numbers, ID numbers, addresses, or passwords. If the user pastes any, tell them to remove such details, they are never needed for a draft.
 - Keep every reply short enough to read in under a minute.`;
 
 app.post('/api/helper', async (c) => {
@@ -179,12 +179,12 @@ app.post('/api/helper', async (c) => {
   const row = await db.prepare('SELECT count FROM gen_usage WHERE visitor_key = ? AND day = ?').bind(key, day).first();
   const used = row?.count ?? 0;
   if (used >= cap) {
-    return c.json({ error: 'cap', message: `You've used today's ${cap} free AI turns. They refresh tomorrow — or copy any prompt from a mission into a free AI chat.` }, 429);
+    return c.json({ error: 'cap', message: `You've used today's ${cap} free AI turns. They refresh tomorrow, or copy any prompt from a mission into a free AI chat.` }, 429);
   }
 
   const { messages, persona } = await c.req.json().catch(() => ({}));
   if (!Array.isArray(messages) || messages.length === 0) return c.json({ error: 'bad_request' }, 400);
-  if (messages.length > 12) return c.json({ error: 'too_long', message: 'This conversation is getting long — start a fresh one and include what you learned.' }, 400);
+  if (messages.length > 12) return c.json({ error: 'too_long', message: 'This conversation is getting long. Start a fresh one and include what you learned.' }, 400);
 
   const clean = messages.slice(-12).map((m) => ({
     role: m.role === 'assistant' ? 'assistant' : 'user',
@@ -195,7 +195,7 @@ app.post('/api/helper', async (c) => {
   if (persona) system += `\n\nThe user has described themselves as: ${String(persona).slice(0, 30)}. Let that quietly shape tone and examples.`;
 
   const text = await generateChat(c.env, system, clean);
-  if (text === null) return c.json({ error: 'llm_error', message: 'The helper is having a moment — try again shortly.' }, 502);
+  if (text === null) return c.json({ error: 'llm_error', message: 'The helper is having a moment. Try again shortly.' }, 502);
 
   await db
     .prepare('INSERT INTO gen_usage (visitor_key, day, count) VALUES (?, ?, 1) ON CONFLICT(visitor_key, day) DO UPDATE SET count = count + 1')

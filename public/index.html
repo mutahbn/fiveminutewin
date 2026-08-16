@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Five-Minute Win — One real-life win with AI. Five minutes here.</title>
-<meta name="description" content="One real-life win with AI, every day. Five minutes here gets you armed — the exact email, script, or plan. Then you make your move.">
+<title>The Five-Minute Win: one real-life win with AI, five minutes at a time.</title>
+<meta name="description" content="One real-life win with AI, every day. Five minutes here gets you armed: the exact email, script, or plan. Then you make your move.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23FFC53D'/><text x='50' y='74' font-size='64' font-weight='bold' text-anchor='middle' fill='%23231A00' font-family='Georgia,serif'>5</text></svg>">
 <style>
   :root{
-    /* Arcade Gold — site theme */
+    /* Arcade Gold, site theme */
     --cream:#0F1630; --paper:#1C2749; --ink:#F5F2E9; --ink-soft:#A8B0CC;
     --coral:#FFC53D; --coral-dark:#E0A500; --coral-ink:#231A00; --amber:#FF8A5C;
     --green:#4ADE80; --green-soft:#16321F; --red-soft:#3A1E2A;
@@ -37,9 +37,11 @@
   .screen{display:none;animation:fade .35s ease;}
   .screen.on{display:block;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
-  .hero{padding:66px 0 26px;max-width:760px;}
+  .hero{padding:66px 0 26px;max-width:860px;}
+  .hero .btn{margin:0 12px 12px 0;}
+  h1 .l1{white-space:nowrap;}
   .kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-dark);background:#3A3013;padding:6px 12px;border-radius:999px;margin-bottom:22px;}
-  h1{font-size:clamp(38px,6vw,62px);line-height:1.06;font-weight:700;}
+  h1{font-size:min(56px,7vw);line-height:1.08;font-weight:700;}
   h1 em{font-style:normal;color:var(--coral);}
   .sub{font-size:20px;color:var(--ink-soft);margin:22px 0 28px;max-width:560px;}
   .btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;background:var(--coral);color:var(--coral-ink);font:inherit;font-weight:700;font-size:17px;padding:15px 26px;border-radius:14px;box-shadow:0 3px 0 var(--coral-dark);transition:transform .08s ease;}
@@ -320,9 +322,9 @@
   <div class="modal">
     <span class="kicker">Welcome · one question, under a minute</span>
     <h2 class="display">Which sounds most like you?</h2>
-    <p>Every daily mission rewrites itself for your life — your examples, your situations, your words. You can switch anytime.</p>
+    <p>Every daily mission rewrites itself for your life, your examples, your situations, your words. You can switch anytime.</p>
     <div class="plist" id="onboardList"></div>
-    <button class="skip" onclick="closeOnboard(null)">I'm just exploring — show me everything</button>
+    <button class="skip" onclick="closeOnboard(null)">I'm just exploring, show me everything</button>
   </div>
 </div>
 
@@ -338,7 +340,7 @@
     <nav>
       <button id="nav-home" class="active" onclick="go('home')"><span class="ico">🏠</span><span>Home</span></button>
       <button id="nav-mission" onclick="go('mission')"><span class="ico">🎯</span><span>Mission</span></button>
-      <button id="nav-helper" onclick="go('helper')"><span class="ico">🛟</span><span>My Problem</span></button>
+      <button id="nav-helper" onclick="go('helper')"><span class="ico">🛟</span><span>Help Me</span></button>
       <button id="nav-challenge" onclick="go('challenge')"><span class="ico">🧠</span><span>Challenge</span></button>
       <button id="nav-member" onclick="go('member')"><span class="ico">⭐</span><span>Members</span></button>
     </nav>
@@ -351,27 +353,27 @@
   <section id="home" class="screen on">
     <div class="hero">
       <span class="kicker">No jargon. No lectures. No experience needed.</span>
-      <h1 class="display">One real-life <em>win</em> with AI.<br>Five minutes here. A win out there.</h1>
-      <p class="sub">Most sites teach you <b>about</b> AI. Here, five minutes gets you <b>armed</b> — the exact email, the phone script, the week's plan, ready in your hand. Then you make your move in real life. That's the win, and it's yours.</p>
+      <h1 class="display"><span class="l1">One real-life <em>win</em> with AI.</span><br>Five minutes here. A win out there.</h1>
+      <p class="sub">Most sites teach you <b>about</b> AI. Here, five minutes gets you <b>armed</b>: the exact email, the phone script, the week's plan, ready in your hand. Then you make your move in real life. That's the win, and it's yours.</p>
       <button class="btn" onclick="go('mission')">Start today's mission →</button>
-      <button class="btn ghost" style="margin-left:10px" onclick="go('helper')">🛟 I have my own problem</button>
-      <button class="btn ghost" style="margin-left:10px" onclick="go('challenge')">Play today's challenge</button>
+      <button class="btn ghost" onclick="go('helper')">🛟 I need help with something</button>
+      <button class="btn ghost" onclick="go('challenge')">Play today's challenge</button>
     </div>
     <div class="how">
       <div class="card">
         <div class="num">1</div>
         <h3 class="display">Get today's mission</h3>
-        <p>A tiny, real-life task — written for <i>your</i> life. Pick who you are once (parent, shop owner, office worker, job-seeker, retiree) and every example fits you from then on.</p>
+        <p>A tiny, real-life task, written for <i>your</i> life. Pick who you are once (parent, shop owner, office worker, job-seeker, retiree) and every example fits you from then on.</p>
       </div>
       <div class="card">
         <div class="num">2</div>
         <h3 class="display">Five minutes: get armed</h3>
-        <p>Fill in a couple of blanks and generate your draft <i>right on this page</i> — then refine it with one tap. Our promise: this part never takes more than five minutes. You leave holding the result.</p>
+        <p>Fill in a couple of blanks and generate your draft <i>right on this page</i>, then refine it with one tap. Our promise: this part never takes more than five minutes. You leave holding the result.</p>
       </div>
       <div class="card">
         <div class="num">3</div>
         <h3 class="display">Make your move, log the win</h3>
-        <p>Send it. Make the call. Cook the plan. That part happens in your life, on your clock — and when it's done, log the win, keep your streak, and play the 30-second challenge to lock the skill in.</p>
+        <p>Send it. Make the call. Cook the plan. That part happens in your life, on your clock, and when it's done, log the win, keep your streak, and play the 30-second challenge to lock the skill in.</p>
       </div>
     </div>
     <div class="strip">
@@ -413,19 +415,19 @@
       <div class="daychips" id="dayChips"></div>
       <div class="daychips-note">Beta preview: browse this week's missions. From launch, one new mission appears here each morning.</div>
       <div class="personas" id="personaRow"></div>
-      <p class="persona-note">Showing examples for: <b id="personaLabel"></b> — switch anytime, the whole mission rewrites itself.</p>
+      <p class="persona-note">Showing examples for: <b id="personaLabel"></b>. Switch anytime, the whole mission rewrites itself.</p>
       <div class="mission-grid">
         <div class="story">
           <h3 class="display" id="storyTitle"></h3>
           <p id="storyBody"></p>
           <div class="fills" id="fillsWrap">
-            <h4>Make it yours — fill in the blanks</h4>
+            <h4>Make it yours, fill in the blanks</h4>
             <div id="fillFields"></div>
           </div>
         </div>
         <div>
           <div class="promptbox">
-            <div class="label">Your prompt — assembling as you type</div>
+            <div class="label">Your prompt: assembling as you type</div>
             <button class="copybtn" onclick="copyPrompt()">Copy</button>
             <pre id="promptText"></pre>
           </div>
@@ -443,23 +445,23 @@
               <button class="refinebtn" onclick="generate('about 30% shorter')">Shorter</button>
               <button class="refinebtn" onclick="generate('firmer and more direct')">Firmer</button>
             </div>
-            <div class="capnote" id="capNote">10 free drafts a day. Or copy the prompt into any AI chat — free forever.</div>
+            <div class="capnote" id="capNote">10 free drafts a day. Or copy the prompt into any AI chat, free forever.</div>
           </div>
         </div>
       </div>
       <div class="doneRow">
-        <button class="btn green" onclick="logWin()">✓ I made my move — log the win</button>
+        <button class="btn green" onclick="logWin()">✓ I made my move: log the win</button>
         <button class="btn ghost small" onclick="go('challenge')">Skip to the challenge</button>
       </div>
       <div class="winbanner" id="winBanner">
         <h3 class="display" id="winTitle"></h3>
-        <p>Your streak is now <b><span id="winStreak"></span> day(s)</b>. One last thing — this is what builds your story:</p>
+        <p>Your streak is now <b><span id="winStreak"></span> day(s)</b>. One last thing, and it builds your story:</p>
         <div class="reflect">
           <input type="text" id="reflectInput" maxlength="140" placeholder="In one line: what happened? (e.g., 'Sent it. Reply came in 2 hours.')">
           <button class="btn small green" onclick="saveReflection()">Save to my wins</button>
         </div>
         <div class="saved-reflection" id="savedReflection"></div>
-        <br><button class="btn small" onclick="go('challenge')">Now lock it in — play today's challenge →</button>
+        <br><button class="btn small" onclick="go('challenge')">Now lock it in: play today's challenge →</button>
       </div>
     </div>
   </section>
@@ -467,25 +469,25 @@
   <section id="helper" class="screen">
     <div class="day-head">
       <div>
-        <div class="day-tag">Bring your own problem</div>
+        <div class="day-tag">Help me · your real life, one thing at a time</div>
         <h2 class="display">What do you need to get done?</h2>
-        <div class="skill-line">I'll ask a question or two, then hand you the result — and the prompt to get it yourself next time.</div>
+        <div class="skill-line">I'll ask a question or two, then hand you the result, and the prompt to get it yourself next time.</div>
       </div>
     </div>
-    <p class="sub" style="font-size:16px;margin-top:14px">An awkward email, a phone script, a plan, a confusing letter to decode, a conversation to practice. One thing at a time, real life only. <b>Leave out account numbers and personal details</b> — drafts never need them.</p>
+    <p class="sub" style="font-size:16px;margin-top:14px">An awkward email, a phone script, a plan, a confusing letter to decode, a conversation to practice. One thing at a time, real life only. <b>Leave out account numbers and personal details</b>, drafts never need them.</p>
     <div class="chips-row" id="helperChips"></div>
     <div class="chatbox" id="chatBox"></div>
     <div class="chat-input">
-      <textarea id="helperInput" rows="2" placeholder="Describe it in a sentence — e.g. 'I need to ask my neighbor to stop parking in my spot, nicely.'"></textarea>
+      <textarea id="helperInput" rows="2" placeholder="Describe it in a sentence, e.g. 'I need to ask my neighbor to stop parking in my spot, nicely.'"></textarea>
       <button class="btn small" id="helperSend" onclick="helperSend()">Send</button>
     </div>
     <div class="capnote" id="helperCap" style="margin-top:8px">Each reply uses one of your 10 free daily AI turns.</div>
     <div class="doneRow" id="helperWinRow" style="display:none">
-      <button class="btn green" onclick="logHelperWin()">✓ This solved it — log my win</button>
-      <button class="btn ghost small" onclick="helperReset()">Start a new problem</button>
+      <button class="btn green" onclick="logHelperWin()">✓ This solved it: log my win</button>
+      <button class="btn ghost small" onclick="helperReset()">Start something new</button>
     </div>
     <div class="winbanner" id="helperWinBanner">
-      <h3 class="display">Win logged — your problem, your move, your result. 🎉</h3>
+      <h3 class="display">Win logged, your problem, your move, your result. 🎉</h3>
       <p>Your streak is now <b><span id="helperWinStreak"></span> day(s)</b>. One line for your story:</p>
       <div class="reflect">
         <input type="text" id="helperReflect" maxlength="140" placeholder="What happened? (e.g., 'Sent the neighbor note. Peace restored.')">
@@ -503,7 +505,7 @@
       </div>
       <div class="pill">Round <span id="roundNum">1</span> of <span id="roundTotal">4</span></div>
     </div>
-    <p class="sub" style="font-size:17px;margin-top:14px">Two people asked AI for help with the same thing. One got gold, one got mush. <b>Tap the one you think won</b> — then see why. Rounds get sneakier as you go.</p>
+    <p class="sub" style="font-size:17px;margin-top:14px">Two people asked AI for help with the same thing. One got gold, one got mush. <b>Tap the one you think won</b>, then see why. Rounds get sneakier as you go.</p>
     <div id="duelWrap"><div class="loading">Loading today's challenge…</div></div>
     <div class="scorebar">
       <span class="pill">Today's score: <span id="score">0</span> / <span id="scoreTotal">4</span></span>
@@ -518,7 +520,7 @@
     <div class="memb-hero">
       <span class="kicker">Membership</span>
       <h2 class="display">Free members get wins.<br>Members get <em style="font-style:normal;color:var(--coral)">proof</em>.</h2>
-      <p class="sub" style="margin-top:16px">The daily mission is free, forever — that's a promise. Membership isn't locked content. It's turning your wins into something you can show the world.</p>
+      <p class="sub" style="margin-top:16px">The daily mission is free, forever, that's a promise. Membership isn't locked content. It's turning your wins into something you can show the world.</p>
     </div>
     <div class="tiers">
       <div class="tier">
@@ -538,8 +540,8 @@
         <div class="price">$5</div>
         <div class="per">per month · founding members keep this price for life</div>
         <ul>
-          <li><b>Your Life Portfolio</b> — every win and reflection, saved, searchable, yours to keep</li>
-          <li><b>Proof that fits your life</b> — the right proof for <i>you</i>, not one certificate for everyone</li>
+          <li><b>Your Life Portfolio</b>, every win and reflection, saved, searchable, yours to keep</li>
+          <li><b>Proof that fits your life</b>, the right proof for <i>you</i>, not one certificate for everyone</li>
           <li><b>Submit your real problem</b> → we turn it into a mission, credited to you by name</li>
           <li>Unlimited on-page drafts with our best AI, no daily cap</li>
         </ul>
@@ -548,24 +550,24 @@
           <button class="btn small" onclick="joinWaitlist()">Join the Founding Member waitlist</button>
         </div>
         <div class="wl-result" id="wlResult"></div>
-        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px">First 100 members get a numbered Founding Member badge — forever. No payment now; we'll email you when doors open.</p>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px">First 100 members get a numbered Founding Member badge, forever. No payment now; we'll email you when doors open.</p>
       </div>
     </div>
     <h3 class="display" style="margin-top:44px;font-size:22px">Proof that fits your life</h3>
     <p style="color:var(--ink-soft);font-size:15px;margin-top:6px;max-width:640px">After 30 logged wins, you choose the proof that matters in <i>your</i> world:</p>
     <div class="proofgrid">
-      <div class="proof"><b>💼 Job-seeker</b><span>A shareable portfolio link for your résumé: 30 real tasks you completed with AI — evidence, not claims.</span></div>
+      <div class="proof"><b>💼 Job-seeker</b><span>A shareable portfolio link for your résumé: 30 real tasks you completed with AI, evidence, not claims.</span></div>
       <div class="proof"><b>🏪 Small-business owner</b><span>A printable "This business runs smart" window badge and web sticker.</span></div>
-      <div class="proof"><b>🖥️ Office worker</b><span>An "AI-Ready" one-pager of your 30 wins — the thing you bring up in your next review.</span></div>
+      <div class="proof"><b>🖥️ Office worker</b><span>An "AI-Ready" one-pager of your 30 wins, the thing you bring up in your next review.</span></div>
       <div class="proof"><b>👨‍👧 Parent &amp; 🌻 Retiree</b><span>Milestone celebrations and a family-shareable wins page. Just your story, well told.</span></div>
     </div>
     <h3 class="display" style="margin-top:44px;font-size:22px">Your trophy shelf</h3>
-    <p style="color:var(--ink-soft);font-size:15px;margin-top:6px">Each life domain has a badge — earned with your first win in it.</p>
+    <p style="color:var(--ink-soft);font-size:15px;margin-top:6px">Each life domain has a badge, earned with your first win in it.</p>
     <div class="shelf" id="shelf"></div>
 
     <div class="portfolio">
       <h3 class="display">Your wins so far</h3>
-      <p class="p-sub">Wins you log are saved on this device for now — members keep them forever, on every device.</p>
+      <p class="p-sub">Wins you log are saved on this device for now, members keep them forever, on every device.</p>
       <div class="wins" id="portfolioWins"></div>
     </div>
   </section>
@@ -576,7 +578,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============ The Five-Minute Win — app v0.2 ============ */
+/* ============ The Five-Minute Win, app v0.2 ============ */
 var PERSONAS = [
   {id:'shop',    name:'🏪 Small-business owner', short:'Small-business owner', onboard:'🏪 I run a small business'},
   {id:'parent',  name:'👨‍👧 Parent',             short:'Parent',               onboard:'👨‍👧 I\'m a parent running a family'},
@@ -627,7 +629,7 @@ function closeOnboard(id){
   else if(!personaId){personaId = 'parent';}
   document.getElementById('onboard').classList.remove('on');
   if(mission) renderMission();
-  if(id){toast('Got it — everything is now written for a '+personaFor(id).short.toLowerCase()+'. Switch anytime.');}
+  if(id){toast('Got it, everything is now written for a '+personaFor(id).short.toLowerCase()+'. Switch anytime.');}
 }
 function personaFor(id){for(var i=0;i<PERSONAS.length;i++){if(PERSONAS[i].id===id)return PERSONAS[i];}return PERSONAS[0];}
 
@@ -642,7 +644,7 @@ async function loadMission(id){
     document.getElementById('missionBody').style.display='block';
     renderMission();
   }catch(e){
-    document.getElementById('missionLoad').textContent = 'Could not load the mission — check your connection and refresh.';
+    document.getElementById('missionLoad').textContent = 'Could not load the mission, check your connection and refresh.';
   }
 }
 function contentFor(){
@@ -742,7 +744,7 @@ function copyPrompt(){
   if(navigator.clipboard){navigator.clipboard.writeText(filledPrompt());}
   beacon('copy_prompt', String(mission.id));
   markDaily('armed');
-  toast('Prompt copied — paste it into any AI chat');
+  toast('Prompt copied, paste it into any AI chat');
 }
 
 /* ---------- generation ---------- */
@@ -763,15 +765,15 @@ async function generate(refine){
       document.getElementById('refineRow').classList.add('show');
       markDaily('armed');
       if(typeof data.remaining === 'number'){
-        document.getElementById('capNote').textContent = data.remaining + ' free drafts left today. Or copy the prompt into any AI chat — free forever.';
+        document.getElementById('capNote').textContent = data.remaining + ' free drafts left today. Or copy the prompt into any AI chat, free forever.';
       }
     } else {
       out.className = 'genout show err';
-      out.textContent = data.message || 'Generation hit a snag — the copy-paste prompt above works in any AI chat, free.';
+      out.textContent = data.message || 'Generation hit a snag, the copy-paste prompt above works in any AI chat, free.';
     }
   }catch(e){
     out.className = 'genout show err';
-    out.textContent = 'Connection hiccup — the copy-paste prompt above works in any AI chat, free.';
+    out.textContent = 'Connection hiccup, the copy-paste prompt above works in any AI chat, free.';
   }
   btn.disabled = false;
 }
@@ -818,7 +820,7 @@ function logWin(){
 }
 function saveReflection(){
   var v = document.getElementById('reflectInput').value.trim();
-  if(!v){toast('One line is all it takes — what happened?');return;}
+  if(!v){toast('One line is all it takes, what happened?');return;}
   var wins = store.get('wins', []);
   wins.unshift({missionId: mission.id, domain: DAY_LABELS[mission.id]||mission.domain, text: v, at: todayStr()});
   store.set('wins', wins.slice(0,200));
@@ -828,7 +830,7 @@ function saveReflection(){
   addXP(10);
   markDaily('reflect');
   maybePerfect();
-  toast('Saved (+10 XP) — see your wins on the Membership page');
+  toast('Saved (+10 XP), see your wins on the Membership page');
 }
 function renderPortfolio(){
   renderShelf();
@@ -836,7 +838,7 @@ function renderPortfolio(){
   var wins = store.get('wins', []);
   wrap.innerHTML = '';
   if(!wins.length){
-    wrap.innerHTML = '<div class="win-item"><b>Nothing yet</b>Your first logged win will appear here — today\'s mission is a good place to start.</div>';
+    wrap.innerHTML = '<div class="win-item"><b>Nothing yet</b>Your first logged win will appear here, today\'s mission is a good place to start.</div>';
     return;
   }
   wins.slice(0,12).forEach(function(w){
@@ -865,7 +867,7 @@ async function loadChallenge(){
     document.getElementById('shareCard').classList.remove('show');
     drawDuel();
   }catch(e){
-    document.getElementById('duelWrap').innerHTML = '<div class="loading">Could not load the challenge — refresh to retry.</div>';
+    document.getElementById('duelWrap').innerHTML = '<div class="loading">Could not load the challenge, refresh to retry.</div>';
   }
 }
 function drawDuel(){
@@ -892,7 +894,7 @@ function pick(k){
   winCard.classList.add('win'); loseCard.classList.add('lose');
   winCard.insertAdjacentHTML('beforeend','<div class="resmark good">✓</div>');
   loseCard.insertAdjacentHTML('beforeend','<div class="resmark bad">✗</div>');
-  document.getElementById('vTitle').textContent = correct ? "✓ You spotted it!" : "✗ Sneaky one — here's the tell:";
+  document.getElementById('vTitle').textContent = correct ? "✓ You spotted it!" : "✗ Sneaky one, here's the tell:";
   document.getElementById('vBody').textContent = r.verdict;
   var btn = document.getElementById('nextBtn');
   if(round < challenge.rounds.length){
@@ -908,13 +910,13 @@ function finishChallenge(){
   var n = challenge.rounds.length;
   var streak = store.get('streak', 0);
   var msg = score === n ? "Perfect "+score+"/"+n+"! You officially have better prompt instincts than most of the internet. 🏆"
-          : score >= n/2 ? score+"/"+n+" — solid. The tells get easier to spot every day you play."
-          : score+"/"+n+" today — which means tomorrow you'll never fall for these again.";
+          : score >= n/2 ? score+"/"+n+", solid. The tells get easier to spot every day you play."
+          : score+"/"+n+" today, which means tomorrow you'll never fall for these again.";
   var squares = results.map(function(c){return c?'🟩':'⬛'}).join('');
   document.getElementById('duelWrap').innerHTML =
     '<div class="winbanner show" style="margin-top:26px"><h3 class="display">'+escHtml(msg)+'</h3>'+
     '<p>New challenge tomorrow with the daily mission.'+(streak?' Streak safe: 🔥 '+streak+' days.':'')+'</p></div>';
-  document.getElementById('shareText').textContent = 'The Five-Minute Win — Challenge, Day '+challenge.missionId+'\n'+squares+'  '+score+'/'+n+(streak?'\n🔥 '+streak+'-day streak':'')+'\nfiveminutewin.com';
+  document.getElementById('shareText').textContent = 'The Five-Minute Win: Challenge, Day '+challenge.missionId+'\n'+squares+'  '+score+'/'+n+(streak?'\n🔥 '+streak+'-day streak':'')+'\nfiveminutewin.com';
   document.getElementById('shareCard').classList.add('show');
   beacon('challenge_done', challenge.missionId+':'+score);
   if(score > 0){ addXP(score * 5); toast('+'+(score*5)+' XP from the challenge'); }
@@ -924,22 +926,22 @@ function finishChallenge(){
 }
 function copyShare(){
   if(navigator.clipboard){navigator.clipboard.writeText(document.getElementById('shareText').textContent);}
-  toast('Copied — paste it anywhere ✨');
+  toast('Copied, paste it anywhere ✨');
 }
 
 /* ---------- waitlist ---------- */
 async function joinWaitlist(){
   var email = document.getElementById('wlEmail').value.trim();
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast('That email doesn\'t look right — one more try?');return;}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast('That email doesn\'t look right, one more try?');return;}
   try{
     var res = await fetch('/api/waitlist', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({email:email})});
     var data = await res.json();
     if(res.ok){
       var el = document.getElementById('wlResult');
-      el.textContent = data.already ? '✓ You\'re already on the list — Founding Member #'+data.position+'.' : '🎉 You\'re Founding Member #'+data.position+' on the waitlist. We\'ll email you when doors open.';
+      el.textContent = data.already ? '✓ You\'re already on the list, Founding Member #'+data.position+'.' : '🎉 You\'re Founding Member #'+data.position+' on the waitlist. We\'ll email you when doors open.';
       el.classList.add('show');
-    } else { toast('Hmm, that didn\'t go through — try again?'); }
-  }catch(e){ toast('Connection hiccup — try again in a moment.'); }
+    } else { toast('Hmm, that didn\'t go through, try again?'); }
+  }catch(e){ toast('Connection hiccup, try again in a moment.'); }
 }
 
 /* ---------- guided helper ---------- */
@@ -976,13 +978,13 @@ function addLearnBox(promptText){
   div.className = 'learnbox';
   var title = document.createElement('div');
   title.className = 'lb-title';
-  title.textContent = '📚 Next time, one prompt does it — save this';
+  title.textContent = '📚 Next time, one prompt does it, save this';
   var pre = document.createElement('pre');
   pre.textContent = promptText;
   var btn = document.createElement('button');
   btn.className = 'copybtn';
   btn.textContent = 'Copy';
-  btn.onclick = function(){ if(navigator.clipboard){navigator.clipboard.writeText(promptText);} toast('Saved to clipboard — that prompt is yours now'); };
+  btn.onclick = function(){ if(navigator.clipboard){navigator.clipboard.writeText(promptText);} toast('Saved to clipboard, that prompt is yours now'); };
   div.appendChild(btn); div.appendChild(title); div.appendChild(pre);
   box.appendChild(div);
   div.scrollIntoView({behavior:'smooth', block:'end'});
@@ -1015,11 +1017,11 @@ async function helperSend(){
         document.getElementById('helperCap').textContent = data.remaining + ' free AI turns left today.';
       }
     } else {
-      addMsg('ai', data.message || 'That did not go through — try once more?');
+      addMsg('ai', data.message || 'That did not go through, try once more?');
     }
   }catch(e){
     typing.remove();
-    addMsg('ai', 'Connection hiccup — try sending that again.');
+    addMsg('ai', 'Connection hiccup, try sending that again.');
   }
   helperBusy = false;
   document.getElementById('helperSend').disabled = false;
@@ -1045,15 +1047,15 @@ function logHelperWin(){
   markDaily('win');
   store.set('coins', store.get('coins', 0) + 1);
   confettiBurst(null, 45);
-  awardBadge('My Problem');
+  awardBadge('Help Me');
   setTimeout(function(){ addXP(25); }, 400);
   toast('🔥 Streak: '+streak+' day'+(streak===1?'':'s'));
 }
 function saveHelperReflection(){
   var v = document.getElementById('helperReflect').value.trim();
-  if(!v){toast('One line is all it takes — what happened?');return;}
+  if(!v){toast('One line is all it takes, what happened?');return;}
   var wins = store.get('wins', []);
-  wins.unshift({missionId: 0, domain: 'My Problem', text: v, at: todayStr()});
+  wins.unshift({missionId: 0, domain: 'Help Me', text: v, at: todayStr()});
   store.set('wins', wins.slice(0,200));
   var s = document.getElementById('helperSaved');
   s.textContent = '📔 Saved to your wins: “'+v+'”';
@@ -1061,7 +1063,7 @@ function saveHelperReflection(){
   addXP(10);
   markDaily('reflect');
   maybePerfect();
-  toast('Saved (+10 XP) — see your wins on the Members page');
+  toast('Saved (+10 XP), see your wins on the Members page');
 }
 
 /* ================= GAME ENGINE ================= */
@@ -1076,7 +1078,7 @@ var LEVELS = [
 var BADGE_DEFS = [
   ['Words','✉️','Word Smith'], ['Money','💰','Money Mover'], ['Time','🍳','Time Bender'],
   ['Work','🎤','Brave Voice'], ['Home','🔧','Fix-It Hero'], ['Paperwork','📄','Paper Slayer'],
-  ['Fun','🎉','Joy Builder'], ['My Problem','🛟','Life Hacker']
+  ['Fun','🎉','Joy Builder'], ['Help Me','🛟','Life Hacker']
 ];
 var QUEST_ICONS = {1:'✉️',2:'💰',3:'🍳',4:'🎤',5:'🔧',6:'📄',7:'🎉'};
 var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1106,7 +1108,7 @@ function addXP(n){
   if(el){ countTo(el, xp, newXp, 800); }
   var after = levelFor(newXp);
   updateGameBar(false);
-  if(after > before){ setTimeout(function(){ theater('🏆', 'Level '+(after+1)+' — '+LEVELS[after].t, levelLine(after)); goldConfetti(); }, 900); }
+  if(after > before){ setTimeout(function(){ theater('🏆', 'Level '+(after+1)+', '+LEVELS[after].t, levelLine(after)); goldConfetti(); }, 900); }
 }
 function levelLine(li){
   var lines = ['Every expert was once here.','A week of wins and counting.','You\'ve saved real money with real scripts.','Your time is officially yours again.','Life admin fears you now.','The certificate tier. You earned every point.'];
@@ -1201,7 +1203,7 @@ function awardBadge(domain){
   BADGE_DEFS.forEach(function(b){ if(b[0]===domain) def = b; });
   if(!def) return;
   badges.push(domain); store.set('badges', badges);
-  setTimeout(function(){ toast('🏅 Badge earned: '+def[2]+' — see your trophy shelf on the Members page'); }, 1800);
+  setTimeout(function(){ toast('🏅 Badge earned: '+def[2]+', see your trophy shelf on the Members page'); }, 1800);
 }
 function renderShelf(){
   var s = document.getElementById('shelf'); if(!s) return;
