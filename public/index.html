@@ -1311,12 +1311,20 @@ function bgStart(){
     if(skyHold){ skyHoldX = nx; skyHoldY = ny; }
   });
   document.addEventListener('mouseleave', function(){ bgMx = -9999; bgMy = -9999; bgLastX = -9999; });
-  document.addEventListener('mousedown', function(e){ skyHold = true; skyHoldX = e.clientX; skyHoldY = e.clientY; });
+  function skyInteractive(el){
+    return el && el.closest && el.closest('button, a, input, textarea, select, label, [onclick], [role="button"]');
+  }
+  document.addEventListener('mousedown', function(e){
+    if(skyInteractive(e.target)) return;
+    skyHold = true; skyHoldX = e.clientX; skyHoldY = e.clientY;
+  });
   document.addEventListener('mouseup', function(e){
+    if(skyInteractive(e.target)){ skyHold = false; return; }
     skyRipples.push({ x: skyHoldPow > 0.25 ? skyHoldX : e.clientX, y: skyHoldPow > 0.25 ? skyHoldY : e.clientY, r: 4, a: 1 });
     skyHold = false;
   });
   document.addEventListener('touchstart', function(e){
+    if(skyInteractive(e.target)) return;
     var t0 = e.touches[0];
     if(t0){ skyHold = true; skyHoldX = t0.clientX; skyHoldY = t0.clientY; bgMx = t0.clientX; bgMy = t0.clientY; }
   }, {passive: true});
@@ -1353,7 +1361,7 @@ function bgFrame(ts){
 
     for(var r = skyRipples.length - 1; r >= 0; r--){
       var rp = skyRipples[r];
-      rp.r += 7; rp.a *= 0.955;
+      rp.r += 12; rp.a *= 0.94;
       bgCtx.globalAlpha = rp.a * 0.45;
       bgCtx.strokeStyle = '#FFD97A'; bgCtx.lineWidth = 1.5;
       bgCtx.beginPath(); bgCtx.arc(rp.x, rp.y, rp.r, 0, 7); bgCtx.stroke();
