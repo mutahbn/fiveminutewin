@@ -13,7 +13,7 @@ binding = "AI"
 [[d1_databases]]
 binding = "DB"
 database_name = "fmw"
-database_id = "REPLACE_AFTER_CREATE"   # set after: wrangler d1 create fmw
+database_id = "4012acde-774f-4f93-b2a4-b1bb2949d59e"   # set after: wrangler d1 create fmw
 
 [vars]
 FREE_GEN_CAP = "10"
