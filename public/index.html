@@ -5,17 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Five-Minute Win — One real-life win with AI. Five minutes here.</title>
 <meta name="description" content="One real-life win with AI, every day. Five minutes here gets you armed — the exact email, script, or plan. Then you make your move.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%237C3AED'/><text x='50' y='74' font-size='64' font-weight='bold' text-anchor='middle' fill='white' font-family='Georgia,serif'>5</text></svg>">
 <style>
   :root{
-    --cream:#FAF5EC; --paper:#FFFDF8; --ink:#221C14; --ink-soft:#5C5347;
-    --coral:#E8593F; --coral-dark:#C74128; --amber:#F2A33C;
-    --green:#3E7C4F; --green-soft:#E4F0E6; --red-soft:#FBE3DC;
-    --line:#E7DECF; --shadow:0 2px 0 rgba(34,28,20,.08); --radius:18px;
+    /* Playful Daylight — site theme */
+    --cream:#F7F5FF; --paper:#FFFFFF; --ink:#241F3D; --ink-soft:#6B648C;
+    --coral:#7C3AED; --coral-dark:#5B21B6; --amber:#FB923C;
+    --green:#4CAF3F; --green-soft:#EAF7E3; --red-soft:#FCE7F3;
+    --pink:#F472B6; --lime:#A3E635; --ringtrack:#EDE9FB;
+    --line:#E9E5F5; --shadow:0 3px 0 rgba(36,31,61,.08); --radius:18px;
+    --glow:0 0 22px rgba(124,58,237,.22);
+    /* Arcade Gold — celebration theater */
+    --thtr-bg:#1C2749; --thtr-ink:#F5F2E9; --thtr-gold:#FFC53D; --thtr-glow:0 0 30px rgba(255,197,61,.45);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;}
   .display{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;letter-spacing:-.01em;}
-  header{position:sticky;top:0;z-index:50;background:rgba(250,245,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  header{position:sticky;top:0;z-index:50;background:rgba(247,245,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
   .bar{max-width:1040px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:18px;}
   .logo{display:flex;align-items:baseline;gap:8px;cursor:pointer;}
   .logo .mark{width:30px;height:30px;border-radius:9px;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;transform:translateY(6px);}
@@ -23,15 +29,15 @@
   .logo .dom{font-size:12px;color:var(--ink-soft);}
   nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;}
   nav button{border:0;background:transparent;font:inherit;font-weight:600;font-size:14px;color:var(--ink-soft);padding:8px 12px;border-radius:10px;cursor:pointer;}
-  nav button:hover{background:#F0E8D9;color:var(--ink);}
+  nav button:hover{background:#EDE8FA;color:var(--ink);}
   nav button.active{background:var(--ink);color:var(--cream);}
-  .streak{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;background:#FDEBD2;border:1px solid #F4D6A6;padding:7px 12px;border-radius:999px;white-space:nowrap;}
+  .streak{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;background:#F1EAFE;border:1px solid #DDD0FA;padding:7px 12px;border-radius:999px;white-space:nowrap;}
   .wrap{max-width:1040px;margin:0 auto;padding:0 22px 90px;}
   .screen{display:none;animation:fade .35s ease;}
   .screen.on{display:block;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   .hero{padding:66px 0 26px;max-width:760px;}
-  .kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-dark);background:#FBE3DC;padding:6px 12px;border-radius:999px;margin-bottom:22px;}
+  .kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral-dark);background:#EFE7FE;padding:6px 12px;border-radius:999px;margin-bottom:22px;}
   h1{font-size:clamp(38px,6vw,62px);line-height:1.06;font-weight:700;}
   h1 em{font-style:normal;color:var(--coral);}
   .sub{font-size:20px;color:var(--ink-soft);margin:22px 0 28px;max-width:560px;}
@@ -52,7 +58,7 @@
   .day-head{padding:46px 0 6px;display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:14px;}
   .day-tag{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
   h2{font-size:clamp(26px,4.2vw,40px);line-height:1.12;margin-top:6px;}
-  .skill-line{margin-top:10px;font-size:14.5px;font-weight:600;color:var(--coral-dark);background:#FBE3DC;display:inline-block;padding:6px 14px;border-radius:999px;}
+  .skill-line{margin-top:10px;font-size:14.5px;font-weight:600;color:var(--coral-dark);background:#EFE7FE;display:inline-block;padding:6px 14px;border-radius:999px;}
   .note-line{margin-top:10px;font-size:13px;color:var(--ink-soft);max-width:640px;}
   .daychips{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 4px;}
   .daychip{border:2px solid var(--line);background:var(--paper);font:inherit;font-size:13.5px;font-weight:700;padding:8px 14px;border-radius:12px;cursor:pointer;color:var(--ink-soft);}
@@ -75,13 +81,13 @@
   .fill input,.fill textarea{width:100%;font:inherit;font-size:14px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--cream);}
   .fill textarea{min-height:64px;resize:vertical;}
   .fill input:focus,.fill textarea:focus{outline:2px solid var(--coral);border-color:transparent;}
-  .promptbox{background:#26201A;color:#F5EEDF;border-radius:var(--radius);padding:22px;position:relative;}
+  .promptbox{background:#231B45;color:#F1EDFF;border-radius:var(--radius);padding:22px;position:relative;}
   .promptbox .label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:12px;}
-  .promptbox pre{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#F5EEDF;}
+  .promptbox pre{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#F1EDFF;}
   .promptbox pre .flld{color:#FFD9A0;}
-  .copybtn{position:absolute;top:16px;right:16px;border:1px solid #4A4030;background:transparent;color:#D8CDB8;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;}
-  .copybtn:hover{background:#3A3226;}
-  .why{margin-top:14px;background:#FDF3E3;border:1px solid #F4D6A6;border-radius:14px;padding:15px 17px;font-size:14px;}
+  .copybtn{position:absolute;top:16px;right:16px;border:1px solid #4A3F7E;background:transparent;color:#C9BFF0;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;}
+  .copybtn:hover{background:#322858;}
+  .why{margin-top:14px;background:#FFF4E8;border:1px solid #FCD9B8;border-radius:14px;padding:15px 17px;font-size:14px;}
   .why b{color:var(--coral-dark);}
   .tryit{margin-top:14px;background:var(--paper);border:2px solid var(--coral);border-radius:var(--radius);padding:20px;}
   .tryit .t-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
@@ -89,7 +95,7 @@
   .tryit .t-note{font-size:11.5px;color:var(--ink-soft);}
   .genout{display:none;margin-top:14px;background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14px;line-height:1.6;white-space:pre-wrap;}
   .genout.show{display:block;animation:fade .35s;}
-  .genout.err{border-color:var(--coral);background:#FBE3DC;}
+  .genout.err{border-color:var(--coral);background:#EFE7FE;}
   .refines{display:none;margin-top:12px;gap:8px;flex-wrap:wrap;align-items:center;}
   .refines.show{display:flex;}
   .refines span{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
@@ -111,7 +117,7 @@
   .duel-card{position:relative;background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);padding:24px;cursor:pointer;transition:border-color .15s, transform .08s;}
   .duel-card:hover{border-color:var(--ink);transform:translateY(-2px);}
   .duel-card.win{border-color:var(--green);background:var(--green-soft);}
-  .duel-card.lose{border-color:#D8B9B2;opacity:.7;}
+  .duel-card.lose{border-color:#E4DAF3;opacity:.7;}
   .duel-card .tag{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;}
   .duel-card pre{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;}
   .resmark{position:absolute;top:-14px;right:16px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;}
@@ -122,8 +128,8 @@
   .verdict h3{font-size:18px;margin-bottom:8px;}
   .verdict p{font-size:15px;color:var(--ink-soft);}
   .scorebar{margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
-  .pill{background:#FDEBD2;border:1px solid #F4D6A6;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;}
-  .sharecard{display:none;margin-top:16px;background:#26201A;color:#F5EEDF;border-radius:14px;padding:18px;font-family:ui-monospace,Menlo,monospace;font-size:14px;white-space:pre-wrap;position:relative;}
+  .pill{background:#F1EAFE;border:1px solid #DDD0FA;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;}
+  .sharecard{display:none;margin-top:16px;background:#231B45;color:#F1EDFF;border-radius:14px;padding:18px;font-family:ui-monospace,Menlo,monospace;font-size:14px;white-space:pre-wrap;position:relative;}
   .sharecard.show{display:block;}
   .memb-hero{padding:50px 0 6px;max-width:720px;}
   .tiers{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px;}
@@ -148,9 +154,9 @@
   .proof span{color:var(--ink-soft);}
   .portfolio{margin-top:40px;background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:34px;}
   .portfolio h3{font-size:22px;margin-bottom:6px;}
-  .portfolio .p-sub{font-size:14px;color:#C9BFA9;margin-bottom:18px;}
+  .portfolio .p-sub{font-size:14px;color:#BDB3E0;margin-bottom:18px;}
   .wins{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
-  .win-item{background:#332B21;border-radius:14px;padding:16px;font-size:13.5px;line-height:1.5;}
+  .win-item{background:#322858;border-radius:14px;padding:16px;font-size:13.5px;line-height:1.5;}
   .win-item b{color:var(--amber);display:block;margin-bottom:4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
   footer{border-top:1px solid var(--line);margin-top:70px;padding:26px 22px;text-align:center;font-size:13px;color:var(--ink-soft);}
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--cream);padding:13px 22px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;transition:all .3s ease;z-index:99;max-width:88vw;text-align:center;}
@@ -183,6 +189,80 @@
   .chat-input{display:flex;gap:8px;align-items:flex-end;}
   .chat-input textarea{flex:1;font:inherit;font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:13px;background:var(--paper);resize:none;}
   .chat-input textarea:focus{outline:2px solid var(--coral);border-color:transparent;}
+
+  /* ============ living background ============ */
+  #bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .aurora{position:fixed;z-index:0;pointer-events:none;border-radius:50%;filter:blur(90px);will-change:transform;}
+  .aurora.a1{width:55vw;height:55vw;top:-18vw;left:-12vw;background:var(--coral);opacity:.10;animation:aur1 21s ease-in-out infinite alternate;}
+  .aurora.a2{width:44vw;height:44vw;bottom:-16vw;right:-10vw;background:var(--amber);opacity:.09;animation:aur2 26s ease-in-out infinite alternate;}
+  .aurora.a3{width:34vw;height:34vw;top:38vh;left:58vw;background:var(--lime);opacity:.07;animation:aur3 31s ease-in-out infinite alternate;}
+  @keyframes aur1{from{transform:translate(0,0) scale(1);}to{transform:translate(9vw,7vh) scale(1.25);}}
+  @keyframes aur2{from{transform:translate(0,0) scale(1.15);}to{transform:translate(-8vw,-6vh) scale(.92);}}
+  @keyframes aur3{from{transform:translate(0,0) scale(1);}to{transform:translate(-11vw,9vh) scale(1.3);}}
+  header,.wrap,footer{position:relative;z-index:1;}
+
+  /* ============ game bar ============ */
+  .gamebar{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:18px 22px;margin:22px 0 6px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
+  .ringwrap{position:relative;width:84px;height:84px;flex:0 0 auto;}
+  .ringwrap svg{transform:rotate(-90deg);}
+  .ring-track{fill:none;stroke:var(--ringtrack);stroke-width:8;}
+  .ring-val{fill:none;stroke:var(--coral);stroke-width:8;stroke-linecap:round;stroke-dasharray:214;stroke-dashoffset:214;transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1);}
+  .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-label b{font-size:16px;}
+  .ring-label span{font-size:9px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;}
+  .statcol{flex:1;min-width:210px;}
+  .lvl-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px;}
+  .lvl-title{font-weight:800;font-size:15px;}
+  .lvl-title small{display:block;font-size:11px;color:var(--ink-soft);font-weight:600;}
+  .xp-num{font-weight:800;color:var(--coral);font-size:13.5px;white-space:nowrap;}
+  .xpbar{height:11px;background:var(--ringtrack);border-radius:999px;overflow:hidden;}
+  .xpfill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--coral),var(--pink));transition:width .9s cubic-bezier(.22,1,.36,1);}
+  .flame{font-size:24px;display:inline-block;animation:flick 1.6s ease-in-out infinite;transform-origin:50% 90%;}
+  @keyframes flick{0%,100%{transform:rotate(-3deg) scale(1);}30%{transform:rotate(2deg) scale(1.08);}60%{transform:rotate(-1deg) scale(.96);}}
+  .coincount{display:inline-flex;align-items:center;gap:6px;background:#F1EAFE;border:1px solid #DDD0FA;padding:6px 13px;border-radius:999px;font-weight:800;font-size:13.5px;}
+
+  /* ============ quest map ============ */
+  .qmap{display:flex;align-items:center;gap:0;overflow-x:auto;padding:10px 2px 22px;scrollbar-width:none;}
+  .qmap::-webkit-scrollbar{display:none;}
+  .qnode{flex:0 0 auto;width:46px;height:46px;border-radius:50%;background:var(--ringtrack);display:flex;align-items:center;justify-content:center;font-size:19px;border:3px solid var(--ringtrack);transition:all .4s;position:relative;filter:grayscale(1);opacity:.55;cursor:pointer;}
+  .qnode.lit{background:var(--paper);border-color:var(--coral);filter:none;opacity:1;box-shadow:var(--glow);}
+  .qnode.today{border-color:var(--amber);opacity:1;filter:none;}
+  .qnode.pulse{animation:npulse .8s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes npulse{0%{transform:scale(.6);}60%{transform:scale(1.25);}100%{transform:scale(1);}}
+  .qlink{flex:0 0 auto;width:28px;height:4px;background:var(--ringtrack);border-radius:2px;}
+  .qlink.lit{background:var(--coral);}
+  .qday{position:absolute;bottom:-17px;font-size:9.5px;color:var(--ink-soft);font-weight:700;width:100%;text-align:center;}
+
+  /* ============ badges ============ */
+  .shelf{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;}
+  .bdg{width:96px;padding:13px 6px 11px;background:var(--paper);border:1px solid var(--line);border-radius:15px;text-align:center;position:relative;overflow:hidden;}
+  .bdg .bi{font-size:29px;display:block;filter:grayscale(1);opacity:.3;transition:all .4s;}
+  .bdg .bn{font-size:10.5px;font-weight:800;margin-top:5px;color:var(--ink-soft);}
+  .bdg.won .bi{filter:none;opacity:1;animation:bpop .5s cubic-bezier(.34,1.56,.64,1);}
+  .bdg.won{border-color:var(--coral);}
+  .bdg.won::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);animation:shine .9s ease .15s;}
+  @keyframes bpop{0%{transform:scale(.4) rotate(-14deg);}70%{transform:scale(1.18) rotate(4deg);}100%{transform:scale(1);}}
+  @keyframes shine{to{left:130%;}}
+
+  /* ============ celebrations (Arcade Gold theater) ============ */
+  .confettibit{position:fixed;top:-14px;border-radius:3px;z-index:200;pointer-events:none;animation:cfall linear forwards;}
+  @keyframes cfall{to{transform:translateY(105vh) rotate(720deg);}}
+  .coinfly{position:fixed;z-index:210;font-size:24px;pointer-events:none;animation:coinArc .9s cubic-bezier(.3,-.2,.6,1) forwards;}
+  @keyframes coinArc{0%{transform:translate(0,0) scale(1);}50%{transform:translate(50px,-80px) scale(1.25);}100%{transform:translate(110px,-20px) scale(.5);opacity:0;}}
+  .theater{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(15,22,48,.72);animation:fadein .3s;padding:20px;}
+  .theater-card{background:var(--thtr-bg);border:3px solid var(--thtr-gold);border-radius:26px;padding:40px 48px;text-align:center;animation:lvlpop .6s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--thtr-glow);color:var(--thtr-ink);max-width:420px;}
+  .theater-card .big{font-size:50px;animation:spin1 .8s ease;display:inline-block;}
+  .theater-card h3{font-size:24px;margin:8px 0 4px;color:var(--thtr-gold);}
+  .theater-card p{font-size:14px;color:#C7CCE4;}
+  @keyframes lvlpop{0%{transform:scale(.5) rotate(-4deg);}70%{transform:scale(1.06);}100%{transform:scale(1);}}
+  @keyframes spin1{from{transform:rotateY(0);}to{transform:rotateY(360deg);}}
+  @keyframes fadein{from{opacity:0;}to{opacity:1;}}
+
+  @media (prefers-reduced-motion: reduce){
+    #bg,.aurora{display:none;}
+    *,*::before,*::after{animation:none !important;}
+  }
 
   /* ============ mobile ============ */
   @media(max-width:640px){
@@ -217,6 +297,9 @@
     .duel-card pre{font-size:12.5px;}
     .msg{max-width:90%;}
     .chat-input .btn{padding:12px 16px;}
+    .gamebar{padding:14px 16px;gap:14px;}
+    .theater-card{padding:30px 24px;}
+    .aurora{filter:blur(60px);}
     .portfolio{padding:20px;}
     .modal{padding:24px 20px;}
     .memb-hero{padding:30px 0 4px;}
@@ -228,6 +311,9 @@
 </style>
 </head>
 <body>
+
+<canvas id="bg"></canvas>
+<div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div>
 
 <div class="overlay" id="onboard">
   <div class="modal">
@@ -305,6 +391,24 @@
         </div>
         <div class="pill">⏱ 5 minutes here · then your move</div>
       </div>
+      <div class="gamebar">
+        <div class="ringwrap">
+          <svg width="84" height="84"><circle class="ring-track" cx="42" cy="42" r="34"/><circle class="ring-val" id="ring" cx="42" cy="42" r="34"/></svg>
+          <div class="ring-label"><b id="ringPct">0%</b><span>today</span></div>
+        </div>
+        <div class="statcol">
+          <div class="lvl-row">
+            <div class="lvl-title" id="lvlTitle">Level 1 · First Steps<small id="lvlNext">next: Streak Keeper</small></div>
+            <div class="xp-num"><span id="xpNum">0</span> XP</div>
+          </div>
+          <div class="xpbar"><div class="xpfill" id="xpFill"></div></div>
+          <div style="margin-top:11px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <span class="flame">🔥</span><b id="streakN" style="font-size:14px">Start your streak</b>
+            <span class="coincount">🪙 <span id="coinN">0</span> wins</span>
+          </div>
+        </div>
+      </div>
+      <div class="qmap" id="qmap"></div>
       <div class="daychips" id="dayChips"></div>
       <div class="daychips-note">Beta preview: browse this week's missions. From launch, one new mission appears here each morning.</div>
       <div class="personas" id="personaRow"></div>
@@ -454,6 +558,10 @@
       <div class="proof"><b>🖥️ Office worker</b><span>An "AI-Ready" one-pager of your 30 wins — the thing you bring up in your next review.</span></div>
       <div class="proof"><b>👨‍👧 Parent &amp; 🌻 Retiree</b><span>Milestone celebrations and a family-shareable wins page. Just your story, well told.</span></div>
     </div>
+    <h3 class="display" style="margin-top:44px;font-size:22px">Your trophy shelf</h3>
+    <p style="color:var(--ink-soft);font-size:15px;margin-top:6px">Each life domain has a badge — earned with your first win in it.</p>
+    <div class="shelf" id="shelf"></div>
+
     <div class="portfolio">
       <h3 class="display">Your wins so far</h3>
       <p class="p-sub">Wins you log are saved on this device for now — members keep them forever, on every device.</p>
@@ -582,6 +690,8 @@ function renderMission(){
   document.getElementById('winBanner').classList.remove('show');
   document.getElementById('savedReflection').classList.remove('show');
   document.getElementById('reflectInput').value='';
+  buildQuest();
+  updateGameBar(false);
   beacon('visit','mission'+mission.id);
 }
 function placeholders(prompt){
@@ -630,6 +740,7 @@ function filledPrompt(){
 function copyPrompt(){
   if(navigator.clipboard){navigator.clipboard.writeText(filledPrompt());}
   beacon('copy_prompt', String(mission.id));
+  markDaily('armed');
   toast('Prompt copied — paste it into any AI chat');
 }
 
@@ -649,6 +760,7 @@ async function generate(refine){
       currentDraft = data.draft;
       out.textContent = data.draft;
       document.getElementById('refineRow').classList.add('show');
+      markDaily('armed');
       if(typeof data.remaining === 'number'){
         document.getElementById('capNote').textContent = data.remaining + ' free drafts left today. Or copy the prompt into any AI chat — free forever.';
       }
@@ -666,7 +778,8 @@ async function generate(refine){
 /* ---------- wins & streaks ---------- */
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function setStreakChip(n){
-  document.getElementById('streakChip').textContent = n > 0 ? '🔥 '+n+'-day streak' : '🔥 Start your streak';
+  var lv = levelFor(store.get('xp', 0)) + 1;
+  document.getElementById('streakChip').textContent = n > 0 ? '🔥 '+n+' · Lv '+lv : '🔥 Lv '+lv+' · Day one';
 }
 function bumpStreak(){
   var streak = store.get('streak', 0);
@@ -687,6 +800,19 @@ function logWin(){
   document.getElementById('winBanner').classList.add('show');
   document.getElementById('winBanner').scrollIntoView({behavior:'smooth',block:'center'});
   beacon('win', String(mission.id));
+  /* game layer */
+  var firstTimeThisMission = store.get('wonDays', []).indexOf(mission.id) === -1;
+  markDaily('win');
+  if(firstTimeThisMission){
+    store.set('coins', store.get('coins', 0) + 1);
+    coinFly(document.querySelector('#mission .btn.green'));
+    confettiBurst(null, 55);
+    questWin(mission.id);
+    awardBadge(DAY_LABELS[mission.id] || mission.domain);
+    setTimeout(function(){ addXP(25); }, 500);
+  } else {
+    updateGameBar(false);
+  }
   toast('🔥 Streak: '+streak+' day'+(streak===1?'':'s'));
 }
 function saveReflection(){
@@ -698,9 +824,13 @@ function saveReflection(){
   var s = document.getElementById('savedReflection');
   s.textContent = '📔 Saved to your wins: “'+v+'”';
   s.classList.add('show');
-  toast('Saved — see your wins on the Membership page');
+  addXP(10);
+  markDaily('reflect');
+  maybePerfect();
+  toast('Saved (+10 XP) — see your wins on the Membership page');
 }
 function renderPortfolio(){
+  renderShelf();
   var wrap = document.getElementById('portfolioWins');
   var wins = store.get('wins', []);
   wrap.innerHTML = '';
@@ -786,6 +916,9 @@ function finishChallenge(){
   document.getElementById('shareText').textContent = 'The Five-Minute Win — Challenge, Day '+challenge.missionId+'\n'+squares+'  '+score+'/'+n+(streak?'\n🔥 '+streak+'-day streak':'')+'\nfiveminutewin.com';
   document.getElementById('shareCard').classList.add('show');
   beacon('challenge_done', challenge.missionId+':'+score);
+  if(score > 0){ addXP(score * 5); toast('+'+(score*5)+' XP from the challenge'); }
+  markDaily('challenge');
+  maybePerfect();
   challenge = null;
 }
 function copyShare(){
@@ -908,6 +1041,11 @@ function logHelperWin(){
   document.getElementById('helperWinBanner').classList.add('show');
   document.getElementById('helperWinBanner').scrollIntoView({behavior:'smooth', block:'center'});
   beacon('win', 'helper');
+  markDaily('win');
+  store.set('coins', store.get('coins', 0) + 1);
+  confettiBurst(null, 45);
+  awardBadge('My Problem');
+  setTimeout(function(){ addXP(25); }, 400);
   toast('🔥 Streak: '+streak+' day'+(streak===1?'':'s'));
 }
 function saveHelperReflection(){
@@ -919,7 +1057,237 @@ function saveHelperReflection(){
   var s = document.getElementById('helperSaved');
   s.textContent = '📔 Saved to your wins: “'+v+'”';
   s.classList.add('show');
-  toast('Saved — see your wins on the Members page');
+  addXP(10);
+  markDaily('reflect');
+  maybePerfect();
+  toast('Saved (+10 XP) — see your wins on the Members page');
+}
+
+/* ================= GAME ENGINE ================= */
+var LEVELS = [
+  {xp:0,    t:'First Steps'},
+  {xp:100,  t:'Streak Keeper'},
+  {xp:250,  t:'Bill Slayer'},
+  {xp:450,  t:'Time Bender'},
+  {xp:700,  t:'Life Optimizer'},
+  {xp:1000, t:'AI-Ready'}
+];
+var BADGE_DEFS = [
+  ['Words','✉️','Word Smith'], ['Money','💰','Money Mover'], ['Time','🍳','Time Bender'],
+  ['Work','🎤','Brave Voice'], ['Home','🔧','Fix-It Hero'], ['Paperwork','📄','Paper Slayer'],
+  ['Fun','🎉','Joy Builder'], ['My Problem','🛟','Life Hacker']
+];
+var QUEST_ICONS = {1:'✉️',2:'💰',3:'🍳',4:'🎤',5:'🔧',6:'📄',7:'🎉'};
+var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function dayState(){
+  var d = store.get('dayState', null);
+  if(!d || d.date !== todayStr()){ d = {date: todayStr(), armed:false, win:false, challenge:false, reflect:false, perfect:false}; store.set('dayState', d); }
+  return d;
+}
+function markDaily(k){
+  var d = dayState(); if(d[k]) return d;
+  d[k] = true; store.set('dayState', d);
+  updateRing();
+  return d;
+}
+function levelFor(xp){
+  var li = 0;
+  for(var i=0;i<LEVELS.length;i++){ if(xp >= LEVELS[i].xp) li = i; }
+  return li;
+}
+function addXP(n){
+  var xp = store.get('xp', 0);
+  var before = levelFor(xp);
+  var newXp = xp + n;
+  store.set('xp', newXp);
+  var el = document.getElementById('xpNum');
+  if(el){ countTo(el, xp, newXp, 800); }
+  var after = levelFor(newXp);
+  updateGameBar(false);
+  if(after > before){ setTimeout(function(){ theater('🏆', 'Level '+(after+1)+' — '+LEVELS[after].t, levelLine(after)); goldConfetti(); }, 900); }
+}
+function levelLine(li){
+  var lines = ['Every expert was once here.','A week of wins and counting.','You\'ve saved real money with real scripts.','Your time is officially yours again.','Life admin fears you now.','The certificate tier. You earned every point.'];
+  return lines[Math.min(li, lines.length-1)];
+}
+function updateGameBar(animate){
+  var xp = store.get('xp', 0), li = levelFor(xp);
+  var lt = document.getElementById('lvlTitle');
+  if(!lt) return;
+  var next = LEVELS[li+1];
+  lt.innerHTML = 'Level '+(li+1)+' · '+LEVELS[li].t+'<small id="lvlNext">'+(next ? 'next: '+next.t : 'max level')+'</small>';
+  document.getElementById('xpNum').textContent = xp;
+  var pct = next ? Math.min(100, ((xp - LEVELS[li].xp) / (next.xp - LEVELS[li].xp)) * 100) : 100;
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('coinN').textContent = store.get('coins', 0);
+  var s = store.get('streak', 0);
+  document.getElementById('streakN').textContent = s > 0 ? s + '-day streak' : 'Start your streak';
+  updateRing();
+}
+function updateRing(){
+  var el = document.getElementById('ring'); if(!el) return;
+  var d = dayState();
+  var pct = d.win ? 100 : (d.armed ? 40 : 0);
+  var C = 214;
+  el.style.strokeDashoffset = C * (1 - pct/100);
+  document.getElementById('ringPct').textContent = pct + '%';
+}
+function countTo(el, from, to, ms){
+  var t0 = null;
+  function step(ts){
+    if(!t0) t0 = ts;
+    var p = Math.min(1, (ts-t0)/ms);
+    el.textContent = Math.round(from + (to-from)*(1-Math.pow(1-p,3)));
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function confettiBurst(colors, n){
+  if(reducedMotion) return;
+  colors = colors || ['#7C3AED','#FB923C','#F472B6','#A3E635','#38BDF8'];
+  for(var i=0;i<(n||50);i++){
+    var d = document.createElement('div');
+    d.className = 'confettibit';
+    var s = 6 + Math.random()*8;
+    d.style.width = s+'px'; d.style.height = (s*0.5)+'px';
+    d.style.left = (Math.random()*100)+'vw';
+    d.style.background = colors[Math.floor(Math.random()*colors.length)];
+    d.style.animationDuration = (1.6 + Math.random()*1.6)+'s';
+    d.style.animationDelay = (Math.random()*0.4)+'s';
+    document.body.appendChild(d);
+    (function(el){ setTimeout(function(){ el.remove(); }, 3800); })(d);
+  }
+}
+function goldConfetti(){ confettiBurst(['#FFC53D','#FFD97A','#FF8A5C','#FFF3CF'], 70); }
+function coinFly(fromEl){
+  if(reducedMotion || !fromEl) return;
+  var r = fromEl.getBoundingClientRect();
+  var c = document.createElement('div');
+  c.className = 'coinfly'; c.textContent = '🪙';
+  c.style.left = (r.left + r.width/2) + 'px'; c.style.top = r.top + 'px';
+  document.body.appendChild(c);
+  setTimeout(function(){ c.remove(); }, 950);
+}
+function theater(icon, title, line){
+  var o = document.createElement('div');
+  o.className = 'theater';
+  var card = document.createElement('div');
+  card.className = 'theater-card';
+  card.innerHTML = '<span class="big">'+icon+'</span><h3 class="display"></h3><p></p>';
+  card.querySelector('h3').textContent = title;
+  card.querySelector('p').textContent = line;
+  o.appendChild(card);
+  o.onclick = function(){ o.remove(); };
+  document.body.appendChild(o);
+  setTimeout(function(){ if(o.parentNode) o.remove(); }, 3200);
+}
+function maybePerfect(){
+  var d = dayState();
+  if(d.win && d.challenge && d.reflect && !d.perfect){
+    d.perfect = true; store.set('dayState', d);
+    setTimeout(function(){
+      theater('⭐', 'PERFECT DAY', 'Mission. Challenge. Reflection. All three, one day. +25 XP');
+      goldConfetti();
+      addXP(25);
+    }, 1400);
+  }
+}
+function awardBadge(domain){
+  var badges = store.get('badges', []);
+  if(badges.indexOf(domain) !== -1) return;
+  var def = null;
+  BADGE_DEFS.forEach(function(b){ if(b[0]===domain) def = b; });
+  if(!def) return;
+  badges.push(domain); store.set('badges', badges);
+  setTimeout(function(){ toast('🏅 Badge earned: '+def[2]+' — see your trophy shelf on the Members page'); }, 1800);
+}
+function renderShelf(){
+  var s = document.getElementById('shelf'); if(!s) return;
+  var badges = store.get('badges', []);
+  s.innerHTML = '';
+  BADGE_DEFS.forEach(function(b){
+    var d = document.createElement('div');
+    d.className = 'bdg' + (badges.indexOf(b[0]) !== -1 ? ' won' : '');
+    d.innerHTML = '<span class="bi">'+b[1]+'</span><span class="bn">'+b[2]+'</span>';
+    s.appendChild(d);
+  });
+}
+function buildQuest(){
+  var m = document.getElementById('qmap'); if(!m) return;
+  var won = store.get('wonDays', []);
+  var todayId = mission ? mission.id : 0;
+  m.innerHTML = '';
+  for(var i=1;i<=7;i++){
+    if(i>1){
+      var l = document.createElement('div');
+      l.className = 'qlink' + (won.indexOf(i-1) !== -1 && won.indexOf(i) !== -1 ? ' lit' : '');
+      m.appendChild(l);
+    }
+    var n = document.createElement('div');
+    n.className = 'qnode' + (won.indexOf(i) !== -1 ? ' lit' : '') + (i===todayId ? ' today' : '');
+    n.id = 'qn'+i;
+    n.innerHTML = QUEST_ICONS[i] + '<span class="qday">Day '+i+'</span>';
+    (function(day){ n.onclick = function(){ loadMission(day); }; })(i);
+    m.appendChild(n);
+  }
+}
+function questWin(day){
+  var won = store.get('wonDays', []);
+  if(won.indexOf(day) === -1){ won.push(day); store.set('wonDays', won); }
+  buildQuest();
+  var n = document.getElementById('qn'+day);
+  if(n){ n.classList.add('pulse'); }
+}
+
+/* ---------- living background (Daylight) ---------- */
+var bgCanvas = document.getElementById('bg');
+var bgCtx = bgCanvas ? bgCanvas.getContext('2d') : null;
+var bgParts = [], bgMx = 0.5, bgMy = 0.5;
+function bgResize(){
+  if(!bgCanvas) return;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  bgCanvas.width = innerWidth * dpr; bgCanvas.height = innerHeight * dpr;
+  bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function bgStart(){
+  if(reducedMotion || !bgCtx) return;
+  bgResize();
+  var colors = ['#7C3AED','#A78BFA','#FB923C','#F472B6','#A3E635'];
+  var n = Math.min(60, Math.max(30, Math.floor(innerWidth / 26)));
+  bgParts = [];
+  for(var i=0;i<n;i++){
+    bgParts.push({
+      x: Math.random()*innerWidth, y: Math.random()*innerHeight,
+      r: 5 + Math.random()*20, c: colors[Math.floor(Math.random()*colors.length)],
+      vy: -(0.05 + Math.random()*0.18), vx: (Math.random()-0.5)*0.14,
+      depth: 0.3 + Math.random()*0.7, tw: Math.random()*Math.PI*2, sway: Math.random()*Math.PI*2
+    });
+  }
+  window.addEventListener('resize', bgResize);
+  document.addEventListener('mousemove', function(e){ bgMx = e.clientX/innerWidth; bgMy = e.clientY/innerHeight; });
+  requestAnimationFrame(bgFrame);
+}
+function bgFrame(){
+  if(!document.hidden){
+    bgCtx.clearRect(0,0,innerWidth,innerHeight);
+    var px = bgMx - 0.5, py = bgMy - 0.5;
+    for(var i=0;i<bgParts.length;i++){
+      var p = bgParts[i];
+      p.tw += 0.012; p.sway += 0.005;
+      p.y += p.vy; p.x += p.vx + Math.sin(p.sway)*0.12;
+      if(p.y < -30){ p.y = innerHeight + 20; p.x = Math.random()*innerWidth; }
+      if(p.x < -30) p.x = innerWidth + 20;
+      if(p.x > innerWidth + 30) p.x = -20;
+      bgCtx.globalAlpha = 0.08 * p.depth + 0.025*Math.sin(p.tw);
+      bgCtx.fillStyle = p.c;
+      bgCtx.beginPath();
+      bgCtx.arc(p.x + px*30*p.depth, p.y + py*20*p.depth, p.r, 0, 7);
+      bgCtx.fill();
+    }
+    bgCtx.globalAlpha = 1;
+  }
+  requestAnimationFrame(bgFrame);
 }
 
 /* ---------- toast ---------- */
@@ -937,6 +1305,8 @@ setStreakChip(store.get('streak', 0));
 buildOnboard();
 buildHelperChips();
 loadMission(null);
+updateGameBar(true);
+bgStart();
 beacon('visit','home');
 </script>
 </body>
