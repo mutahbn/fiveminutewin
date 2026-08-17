@@ -69,3 +69,10 @@ CREATE TABLE IF NOT EXISTS events (               -- lightweight analytics
   meta TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS memberships (
+  license_hash TEXT PRIMARY KEY,   -- SHA-256 of license key; raw key never stored
+  email TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  activated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);

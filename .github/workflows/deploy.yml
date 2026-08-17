@@ -34,4 +34,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: deploy
           postCommands: |
+            wrangler d1 execute fmw --remote --file=db/schema.sql
             wrangler d1 execute fmw --remote --file=db/seed.sql

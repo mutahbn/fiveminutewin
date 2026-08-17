@@ -104,6 +104,7 @@
   .refines span{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
   .refinebtn{border:1.5px solid var(--ink);background:transparent;font:inherit;font-size:13px;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer;}
   .refinebtn:hover{background:var(--ink);color:var(--cream);}
+  body.is-member .mr-lock{display:none;}
   .capnote{margin-top:10px;font-size:12px;color:var(--ink-soft);}
   .doneRow{margin-top:26px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
   .winbanner{display:none;margin-top:22px;background:var(--green-soft);border:2px solid var(--green);border-radius:var(--radius);padding:22px 24px;}
@@ -444,6 +445,8 @@
               <button class="refinebtn" onclick="generate('warmer and more personal')">Warmer</button>
               <button class="refinebtn" onclick="generate('about 30% shorter')">Shorter</button>
               <button class="refinebtn" onclick="generate('firmer and more direct')">Firmer</button>
+              <button class="refinebtn" onclick="memberRefine('more formal and polished')">More formal <span class="mr-lock">👑</span></button>
+              <button class="refinebtn" onclick="memberRefine('written in simpler, easier words')">Simpler words <span class="mr-lock">👑</span></button>
             </div>
             <div class="capnote" id="capNote">10 free drafts a day. Or copy the prompt into any AI chat, free forever.</div>
           </div>
@@ -526,13 +529,14 @@
       <div class="tier">
         <h3 class="display">Everyone</h3>
         <div class="price">$0</div>
-        <div class="per">free forever</div>
+        <div class="per">free forever, that's a promise</div>
         <ul>
-          <li>The daily mission, every day, all five personas</li>
-          <li>Generate your drafts right on the page (10 a day)</li>
-          <li>The daily challenge game &amp; streaks</li>
-          <li>The daily mission in your inbox each morning</li>
+          <li>Today's mission, every day, all five personas <i style="color:var(--coral)">· members unlock the whole archive</i></li>
+          <li>10 on-page drafts a day <i style="color:var(--coral)">· members: unlimited, with longer, richer replies</i></li>
+          <li>The challenge game &amp; streaks <i style="color:var(--coral)">· members get the 🛡️ Streak Shield</i></li>
+          <li>Help Me conversations, 12 turns <i style="color:var(--coral)">· members: 30, with every draft saved</i></li>
         </ul>
+        <p style="font-size:13px;color:var(--ink-soft);margin-top:14px">Free gets you wins. The Circle makes them <b>unlimited, protected, and yours to keep</b>, for less than one coffee a month.</p>
       </div>
       <div class="tier pro">
         <div class="badge-top">FOUNDING MEMBERS</div>
@@ -540,17 +544,38 @@
         <div class="price">$5</div>
         <div class="per">per month · founding members keep this price for life</div>
         <ul>
-          <li><b>Your Life Portfolio</b>, every win and reflection, saved, searchable, yours to keep</li>
-          <li><b>Proof that fits your life</b>, the right proof for <i>you</i>, not one certificate for everyone</li>
-          <li><b>Submit your real problem</b> → we turn it into a mission, credited to you by name</li>
-          <li>Unlimited on-page drafts with our best AI, no daily cap</li>
+          <li><b>Unlimited drafts &amp; AI turns.</b> No daily caps, ever. Generate until it's perfect.</li>
+          <li><b>Longer, richer replies.</b> Members get a bigger generation budget: fuller drafts, deeper plans.</li>
+          <li><b>The full mission archive.</b> Free users get today. You get every mission ever published, replayable any time.</li>
+          <li><b>Extra refine styles.</b> "More formal" and "Simpler words" join Warmer, Shorter, Firmer.</li>
+          <li><b>My Drafts.</b> Every draft you generate is saved automatically, one tap to reuse or copy.</li>
+          <li><b>🛡️ Streak Shield.</b> Life happens. One missed day a week can't break a member's streak.</li>
+          <li><b>Longer Help Me sessions.</b> 30-turn conversations for the complicated stuff.</li>
+          <li><b>Printable Life Portfolio.</b> Download your wins as a beautiful document, proof you can hold.</li>
+          <li><b>Submit your real problem</b> → we turn it into a mission, credited to you by name.</li>
+          <li><b>👑 Founding badge #1-100</b> and your $5 price locked for life, while everyone later pays more.</li>
         </ul>
-        <div class="wl">
-          <input type="email" id="wlEmail" placeholder="your@email.com" autocomplete="email" autocapitalize="off" spellcheck="false">
-          <button class="btn small" onclick="joinWaitlist()">Join the Founding Member waitlist</button>
+        <div id="memberJoin">
+          <button class="btn" style="width:100%;justify-content:center;margin-top:16px" onclick="goCheckout()">👑 Become a Founding Member · $5/mo</button>
+          <div class="wl">
+            <input type="email" id="wlEmail" placeholder="your@email.com" autocomplete="email" autocapitalize="off" spellcheck="false">
+            <button class="btn small ghost" onclick="joinWaitlist()">Or join the waitlist first</button>
+          </div>
+          <div class="wl-result" id="wlResult"></div>
+          <div style="margin-top:18px;border-top:1px dashed var(--line);padding-top:14px">
+            <div style="font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:8px">Already a member? Enter the license key from your purchase email:</div>
+            <div class="wl" style="margin-top:0">
+              <input type="text" id="licKey" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" autocapitalize="off" spellcheck="false">
+              <button class="btn small green" onclick="activateMember()">Activate</button>
+            </div>
+            <div class="wl-result" id="licResult"></div>
+          </div>
         </div>
-        <div class="wl-result" id="wlResult"></div>
-        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px">First 100 members get a numbered Founding Member badge, forever. No payment now; we'll email you when doors open.</p>
+        <div id="memberActive" style="display:none;margin-top:16px">
+          <div class="winbanner show" style="margin-top:0"><h3 class="display">👑 You're in the Winner's Circle.</h3>
+          <p>Unlimited on-page drafts, no daily cap. Portfolio, proofs, and mission credits roll out to members first. Thank you for backing this.</p></div>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-soft);margin-top:10px">First 100 members get a numbered Founding Member badge, forever. Secure checkout by Lemon Squeezy: cards, PayPal, Apple Pay, Google Pay.</p>
       </div>
     </div>
     <h3 class="display" style="margin-top:44px;font-size:22px">Proof that fits your life</h3>
@@ -565,8 +590,15 @@
     <p style="color:var(--ink-soft);font-size:15px;margin-top:6px">Each life domain has a badge, earned with your first win in it.</p>
     <div class="shelf" id="shelf"></div>
 
+    <h3 class="display" style="margin-top:44px;font-size:22px">📝 My Drafts</h3>
+    <p style="color:var(--ink-soft);font-size:15px;margin-top:6px" id="draftsNote">Members: every draft you generate is saved here automatically.</p>
+    <div class="wins" id="draftsWrap" style="margin-top:14px"></div>
+
     <div class="portfolio">
-      <h3 class="display">Your wins so far</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <h3 class="display">Your wins so far</h3>
+        <button class="btn small ghost" style="border-color:var(--cream);color:var(--cream)" onclick="exportPortfolio()">⬇️ Download portfolio</button>
+      </div>
       <p class="p-sub">Wins you log are saved on this device for now, members keep them forever, on every device.</p>
       <div class="wins" id="portfolioWins"></div>
     </div>
@@ -592,6 +624,8 @@ var store = {
   get: function(k,d){ try{ var v=localStorage.getItem('fmw_'+k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
   set: function(k,v){ try{ localStorage.setItem('fmw_'+k, JSON.stringify(v)); }catch(e){} }
 };
+var CHECKOUT_URL = '';   /* paste your Lemon Squeezy product link here when the store is live */
+var memberToken = store.get('memberToken', null);
 var personaId = store.get('persona', null);
 var mission = null;
 var currentDraft = '';
@@ -757,14 +791,15 @@ async function generate(refine){
   try{
     var body = {missionId: mission.id, persona: personaId, answers: answers};
     if(refine && currentDraft){ body.refine = refine; body.draft = currentDraft; }
-    var res = await fetch('/api/generate', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(body)});
+    var res = await fetch('/api/generate', {method:'POST', headers: memberHeaders({'content-type':'application/json'}), body: JSON.stringify(body)});
     var data = await res.json();
     if(res.ok && data.draft){
       currentDraft = data.draft;
       out.textContent = data.draft;
+      saveDraft(data.draft);
       document.getElementById('refineRow').classList.add('show');
       markDaily('armed');
-      if(typeof data.remaining === 'number'){
+      if(typeof data.remaining === 'number' && !memberToken){
         document.getElementById('capNote').textContent = data.remaining + ' free drafts left today. Or copy the prompt into any AI chat, free forever.';
       }
     } else {
@@ -782,15 +817,30 @@ async function generate(refine){
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function setStreakChip(n){
   var lv = levelFor(store.get('xp', 0)) + 1;
-  document.getElementById('streakChip').textContent = n > 0 ? '🔥 '+n+' · Lv '+lv : '🔥 Lv '+lv+' · Day one';
+  var crown = memberToken ? '👑 ' : '';
+  document.getElementById('streakChip').textContent = crown + (n > 0 ? '🔥 '+n+' · Lv '+lv : '🔥 Lv '+lv+' · Day one');
+}
+function isoWeek(){
+  var d = new Date();
+  var onejan = new Date(d.getFullYear(), 0, 1);
+  return d.getFullYear() + '-' + Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
 }
 function bumpStreak(){
   var streak = store.get('streak', 0);
   var last = store.get('lastWinDate', null);
   var t = todayStr();
   if(last !== t){
-    var y = new Date(Date.now()-86400000).toISOString().slice(0,10);
-    streak = (last === y) ? streak+1 : 1;
+    var y1 = new Date(Date.now()-86400000).toISOString().slice(0,10);
+    var y2 = new Date(Date.now()-172800000).toISOString().slice(0,10);
+    if(last === y1){
+      streak = streak + 1;
+    } else if(memberToken && last === y2 && store.get('shieldWeek', '') !== isoWeek()){
+      streak = streak + 1;
+      store.set('shieldWeek', isoWeek());
+      setTimeout(function(){ toast('🛡️ Streak Shield used: your streak survived the missed day.'); }, 1200);
+    } else {
+      streak = 1;
+    }
     store.set('streak', streak); store.set('lastWinDate', t);
   }
   setStreakChip(streak);
@@ -835,6 +885,7 @@ function saveReflection(){
 }
 function renderPortfolio(){
   renderShelf();
+  renderMemberState();
   var wrap = document.getElementById('portfolioWins');
   var wins = store.get('wins', []);
   wrap.innerHTML = '';
@@ -930,6 +981,104 @@ function copyShare(){
   toast('Copied, paste it anywhere ✨');
 }
 
+/* ---------- membership ---------- */
+function upsell(feature){
+  toast('👑 ' + feature + ' is a Winner\'s Circle perk, $5/mo. Take a look →');
+  setTimeout(function(){ go('member'); }, 1200);
+}
+function memberRefine(style){
+  if(!memberToken){ upsell('Extra refine styles'); return; }
+  generate(style);
+}
+function saveDraft(text){
+  if(!memberToken || !text) return;
+  var drafts = store.get('drafts', []);
+  drafts.unshift({ t: (mission ? 'Day ' + mission.id + ' · ' + (DAY_LABELS[mission.id] || '') : 'Draft'), text: text.slice(0, 4000), at: todayStr() });
+  store.set('drafts', drafts.slice(0, 100));
+}
+function renderDrafts(){
+  var wrap = document.getElementById('draftsWrap'); if(!wrap) return;
+  var note = document.getElementById('draftsNote');
+  wrap.innerHTML = '';
+  if(!memberToken){
+    note.textContent = '👑 Members: every draft you generate is saved here automatically, ready to reuse. Free drafts vanish when you leave.';
+    return;
+  }
+  var drafts = store.get('drafts', []);
+  note.textContent = drafts.length ? drafts.length + ' saved draft' + (drafts.length===1?'':'s') + '. Tap any card to copy it.' : 'Generate your first draft and it will be waiting here.';
+  drafts.slice(0, 12).forEach(function(d){
+    var div = document.createElement('div');
+    div.className = 'win-item';
+    div.style.cursor = 'pointer';
+    var b = document.createElement('b'); b.textContent = d.t + ' · ' + d.at;
+    div.appendChild(b);
+    div.appendChild(document.createTextNode(d.text.slice(0, 140) + (d.text.length > 140 ? '…' : '')));
+    div.onclick = function(){ if(navigator.clipboard){ navigator.clipboard.writeText(d.text); } toast('Draft copied'); };
+    wrap.appendChild(div);
+  });
+}
+function exportPortfolio(){
+  if(!memberToken){ upsell('The printable Life Portfolio'); return; }
+  var wins = store.get('wins', []);
+  var rows = wins.map(function(w){ return '<div style="border-bottom:1px solid #ddd;padding:10px 0"><b>' + w.domain + ' · ' + w.at + '</b><br>' + String(w.text).replace(/</g,'&lt;') + '</div>'; }).join('');
+  var xp = store.get('xp', 0), streak = store.get('streak', 0);
+  var doc = '<html><head><title>My Life Portfolio, The Five-Minute Win</title></head><body style="font-family:Georgia,serif;max-width:640px;margin:40px auto;color:#222">' +
+    '<h1 style="margin-bottom:4px">My Life Portfolio</h1><p style="color:#777">The Five-Minute Win · ' + wins.length + ' wins · ' + xp + ' XP · ' + streak + '-day streak</p>' +
+    (rows || '<p>No wins logged yet.</p>') +
+    '<p style="margin-top:30px;color:#777;font-size:13px">Real tasks, finished with AI, by me. fiveminutewin.com</p></body></html>';
+  var w2 = window.open('', '_blank');
+  if(w2){ w2.document.write(doc); w2.document.close(); setTimeout(function(){ w2.print(); }, 400); }
+}
+function goCheckout(){
+  if(!CHECKOUT_URL){
+    toast('Checkout opens very soon. Join the waitlist and you\'ll be first through the door.');
+    var el = document.getElementById('wlEmail'); if(el) el.focus();
+    return;
+  }
+  window.open(CHECKOUT_URL, '_blank');
+}
+function memberHeaders(base){
+  var h = base || {};
+  if(memberToken) h['x-member-token'] = memberToken;
+  return h;
+}
+function renderMemberState(){
+  document.body.classList.toggle('is-member', !!memberToken);
+  setStreakChip(store.get('streak', 0));
+  renderDrafts();
+  var joined = !!memberToken;
+  var j = document.getElementById('memberJoin'), a = document.getElementById('memberActive');
+  if(j) j.style.display = joined ? 'none' : 'block';
+  if(a) a.style.display = joined ? 'block' : 'none';
+  if(joined){
+    var cn = document.getElementById('capNote');
+    if(cn) cn.textContent = '👑 Member: unlimited drafts.';
+    var hc = document.getElementById('helperCap');
+    if(hc) hc.textContent = '👑 Member: unlimited AI turns.';
+  }
+}
+async function activateMember(){
+  var key = document.getElementById('licKey').value.trim();
+  var out = document.getElementById('licResult');
+  if(!key){ toast('Paste the license key from your purchase email.'); return; }
+  try{
+    var res = await fetch('/api/member/activate', {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({key:key})});
+    var data = await res.json();
+    if(res.ok && data.token){
+      memberToken = data.token;
+      store.set('memberToken', memberToken);
+      renderMemberState();
+      theater('👑', 'Welcome to the Winner\'s Circle', 'Unlimited drafts, and our lasting thanks.');
+      goldConfetti();
+      beacon('signup', 'member');
+    } else {
+      out.textContent = data.message || 'Activation failed. Double-check the key.';
+      out.style.color = 'var(--pink)';
+      out.classList.add('show');
+    }
+  }catch(e){ toast('Connection hiccup. Try again in a moment.'); }
+}
+
 /* ---------- waitlist ---------- */
 async function joinWaitlist(){
   var email = document.getElementById('wlEmail').value.trim();
@@ -1002,7 +1151,7 @@ async function helperSend(){
   helperMsgs.push({role:'user', content:text});
   var typing = addMsg('ai typing', 'thinking…');
   try{
-    var res = await fetch('/api/helper', {method:'POST', headers:{'content-type':'application/json'},
+    var res = await fetch('/api/helper', {method:'POST', headers: memberHeaders({'content-type':'application/json'}),
       body: JSON.stringify({messages: helperMsgs, persona: personaFor(personaId).short})});
     var data = await res.json();
     typing.remove();
@@ -1014,11 +1163,20 @@ async function helperSend(){
         addLearnBox(parts[1].trim());
         document.getElementById('helperWinRow').style.display = 'flex';
       }
-      if(typeof data.remaining === 'number'){
+      if(typeof data.remaining === 'number' && !memberToken){
         document.getElementById('helperCap').textContent = data.remaining + ' free AI turns left today.';
       }
     } else {
       addMsg('ai', data.message || 'That did not go through, try once more?');
+      if(data.error === 'cap'){
+        var box = document.getElementById('chatBox');
+        var cb = document.createElement('button');
+        cb.className = 'btn small';
+        cb.style.alignSelf = 'flex-start';
+        cb.textContent = '👑 Members have no limits, see the Circle';
+        cb.onclick = function(){ go('member'); };
+        box.appendChild(cb);
+      }
     }
   }catch(e){
     typing.remove();
@@ -1553,6 +1711,7 @@ buildOnboard();
 buildHelperChips();
 loadMission(null);
 updateGameBar(true);
+renderMemberState();
 bgStart();
 beacon('visit','home');
 </script>

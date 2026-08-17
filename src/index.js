@@ -30,11 +30,11 @@ async function visitorKey(c) {
 const today = () => new Date().toISOString().slice(0, 10);
 
 // Engine chain: Anthropic (premium, if key configured) → Workers AI (free tier) → null.
-async function generateText(env, system, userMessage) {
-  return generateChat(env, system, [{ role: 'user', content: userMessage }]);
+async function generateText(env, system, userMessage, maxTokens) {
+  return generateChat(env, system, [{ role: 'user', content: userMessage }], maxTokens);
 }
 
-async function generateChat(env, system, messages) {
+async function generateChat(env, system, messages, maxTokens) {
   if (env.ANTHROPIC_API_KEY) {
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -46,7 +46,7 @@ async function generateChat(env, system, messages) {
         },
         body: JSON.stringify({
           model: env.GEN_MODEL || 'claude-haiku-4-5',
-          max_tokens: 700,
+          max_tokens: maxTokens || 700,
           system,
           messages,
         }),
@@ -62,7 +62,7 @@ async function generateChat(env, system, messages) {
     try {
       const out = await env.AI.run(env.WORKERS_AI_MODEL || '@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
         messages: [{ role: 'system', content: system }].concat(messages),
-        max_tokens: 700,
+        max_tokens: maxTokens || 700,
       });
       if (out?.response) return out.response;
     } catch { /* no engine available */ }
@@ -87,12 +87,15 @@ async function logEvent(db, name, meta) {
 
 /* ---------- missions ---------- */
 
-app.get('/api/mission/today', async (c) => {
-  // Launch logic: rotate through available missions by date until daily publishing starts.
-  const { results } = await c.env.DB.prepare('SELECT id FROM missions ORDER BY id').all();
+async function todayMissionId(db) {
+  const { results } = await db.prepare('SELECT id FROM missions ORDER BY id').all();
   const ids = results.map((r) => r.id);
   const epochDay = Math.floor(Date.now() / 86400000);
-  const id = ids[epochDay % ids.length];
+  return ids[epochDay % ids.length];
+}
+
+app.get('/api/mission/today', async (c) => {
+  const id = await todayMissionId(c.env.DB);
   const payload = await missionPayload(c.env.DB, id);
   await logEvent(c.env.DB, 'mission_view', String(id));
   return c.json(payload);
@@ -114,18 +117,27 @@ app.get('/api/challenge/:id', async (c) => {
 
 app.post('/api/generate', async (c) => {
   const db = c.env.DB;
+  const member = await isMember(c);
   const cap = Number(c.env.FREE_GEN_CAP || 10);
   const key = await visitorKey(c);
   const day = today();
 
   const row = await db.prepare('SELECT count FROM gen_usage WHERE visitor_key = ? AND day = ?').bind(key, day).first();
   const used = row?.count ?? 0;
-  if (used >= cap) {
+  if (!member && used >= cap) {
     return c.json({ error: 'cap', message: `You've used today's ${cap} free drafts. Members generate without limits, or copy the prompt into any AI chat, free forever.` }, 429);
   }
 
   const { missionId, persona, answers, refine, draft } = await c.req.json().catch(() => ({}));
   if (!missionId || !persona) return c.json({ error: 'bad_request' }, 400);
+  // Archive access: free users generate on today's mission; members on any mission.
+  if (!member) {
+    const tid = await todayMissionId(db);
+    if (Number(missionId) !== tid) {
+      return c.json({ error: 'member_only', message: "Replaying past missions is a Winner's Circle perk. Today's mission is free, and it's a good one." }, 403);
+    }
+  }
+
   const content = await db
     .prepare('SELECT prompt FROM mission_content WHERE mission_id = ? AND persona = ?')
     .bind(missionId, persona).first();
@@ -145,7 +157,7 @@ app.post('/api/generate', async (c) => {
     ? `Here is a draft that was produced for this request:\n---\n${String(draft).slice(0, 3000)}\n---\nOriginal request: ${filled}\n\nRevise the draft to be ${String(refine).slice(0, 100)}. Reply with only the revised version.`
     : filled;
 
-  const text = await generateText(c.env, SYSTEM, userMessage);
+  const text = await generateText(c.env, SYSTEM, userMessage, member ? 1100 : 700);
   if (text === null) return c.json({ error: 'llm_error', message: 'Generation is having a moment. The copy-paste prompt below works in any AI chat, free.' }, 502);
 
   await db
@@ -153,7 +165,54 @@ app.post('/api/generate', async (c) => {
     .bind(key, day).run();
   await logEvent(db, 'generate', `${missionId}:${persona}`);
 
-  return c.json({ draft: text, remaining: cap - used - 1 });
+  return c.json({ draft: text, remaining: member ? null : cap - used - 1, member });
+});
+
+/* ---------- membership (Lemon Squeezy license keys) ---------- */
+
+async function sha256hex(text) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+async function memberToken(env, licenseHash) {
+  const sig = await sha256hex(`${env.VISITOR_SALT || 'dev-salt'}:member:${licenseHash}`);
+  return `${licenseHash}.${sig}`;
+}
+async function isMember(c) {
+  const token = c.req.header('x-member-token');
+  if (!token) return false;
+  const [hash, sig] = token.split('.');
+  if (!hash || !sig) return false;
+  const expect = await sha256hex(`${c.env.VISITOR_SALT || 'dev-salt'}:member:${hash}`);
+  if (sig !== expect) return false;
+  const row = await c.env.DB.prepare("SELECT status FROM memberships WHERE license_hash = ?").bind(hash).first();
+  return row?.status === 'active';
+}
+
+app.post('/api/member/activate', async (c) => {
+  const { key } = await c.req.json().catch(() => ({}));
+  if (!key || key.length < 8 || key.length > 64) return c.json({ error: 'bad_key', message: 'That does not look like a license key.' }, 400);
+  try {
+    const res = await fetch('https://api.lemonsqueezy.com/v1/licenses/activate', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ license_key: key.trim(), instance_name: 'fiveminutewin' }),
+    });
+    const data = await res.json();
+    const valid = data.activated === true || data.license_key?.status === 'active';
+    if (!valid) {
+      const msg = data.error || 'That key could not be activated. Check for typos, or reply to your purchase email for help.';
+      return c.json({ error: 'invalid', message: String(msg).slice(0, 200) }, 400);
+    }
+    const hash = await sha256hex(key.trim());
+    const email = data.meta?.customer_email || null;
+    await c.env.DB.prepare('INSERT INTO memberships (license_hash, email, status) VALUES (?, ?, ?) ON CONFLICT(license_hash) DO UPDATE SET status = ?')
+      .bind(hash, email, 'active', 'active').run();
+    await logEvent(c.env.DB, 'member_activate', null);
+    return c.json({ token: await memberToken(c.env, hash), email });
+  } catch (e) {
+    return c.json({ error: 'network', message: 'Could not reach the license service. Try again in a minute.' }, 502);
+  }
 });
 
 /* ---------- guided helper: bring your own problem ---------- */
@@ -172,21 +231,23 @@ Rules:
 
 app.post('/api/helper', async (c) => {
   const db = c.env.DB;
+  const member = await isMember(c);
   const cap = Number(c.env.FREE_GEN_CAP || 10);
   const key = await visitorKey(c);
   const day = today();
 
   const row = await db.prepare('SELECT count FROM gen_usage WHERE visitor_key = ? AND day = ?').bind(key, day).first();
   const used = row?.count ?? 0;
-  if (used >= cap) {
+  if (!member && used >= cap) {
     return c.json({ error: 'cap', message: `You've used today's ${cap} free AI turns. They refresh tomorrow, or copy any prompt from a mission into a free AI chat.` }, 429);
   }
 
   const { messages, persona } = await c.req.json().catch(() => ({}));
   if (!Array.isArray(messages) || messages.length === 0) return c.json({ error: 'bad_request' }, 400);
-  if (messages.length > 12) return c.json({ error: 'too_long', message: 'This conversation is getting long. Start a fresh one and include what you learned.' }, 400);
+  const turnLimit = member ? 30 : 12;
+  if (messages.length > turnLimit) return c.json({ error: 'too_long', message: member ? 'Even great conversations need a fresh page. Start a new one and include what you learned.' : 'Free conversations run 12 turns. Members go to 30, or start fresh and include what you learned.' }, 400);
 
-  const clean = messages.slice(-12).map((m) => ({
+  const clean = messages.slice(-turnLimit).map((m) => ({
     role: m.role === 'assistant' ? 'assistant' : 'user',
     content: String(m.content || '').slice(0, 2000),
   }));
@@ -194,7 +255,7 @@ app.post('/api/helper', async (c) => {
   let system = HELPER_SYSTEM;
   if (persona) system += `\n\nThe user has described themselves as: ${String(persona).slice(0, 30)}. Let that quietly shape tone and examples.`;
 
-  const text = await generateChat(c.env, system, clean);
+  const text = await generateChat(c.env, system, clean, member ? 1100 : 700);
   if (text === null) return c.json({ error: 'llm_error', message: 'The helper is having a moment. Try again shortly.' }, 502);
 
   await db
@@ -202,7 +263,7 @@ app.post('/api/helper', async (c) => {
     .bind(key, day).run();
   await logEvent(db, 'helper_turn', String(clean.length));
 
-  return c.json({ reply: text, remaining: cap - used - 1 });
+  return c.json({ reply: text, remaining: member ? null : cap - used - 1, member });
 });
 
 /* ---------- waitlist ---------- */
