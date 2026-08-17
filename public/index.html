@@ -325,7 +325,28 @@
     <h2 class="display">Which sounds most like you?</h2>
     <p>Every daily mission rewrites itself for your life, your examples, your situations, your words. You can switch anytime.</p>
     <div class="plist" id="onboardList"></div>
+    <button class="skip" onclick="closeOnboard(null); openCustomModal();" style="display:block">✨ None of these fit? Create your own persona</button>
     <button class="skip" onclick="closeOnboard(null)">I'm just exploring, show me everything</button>
+  </div>
+</div>
+
+<div class="overlay" id="customModal">
+  <div class="modal">
+    <span class="kicker">✨ Your own persona</span>
+    <h2 class="display">Tell us about your life</h2>
+    <p>Every draft the AI writes will quietly fit who you are. One honest sentence is plenty.</p>
+    <div class="fill" style="margin-bottom:10px">
+      <label>What should we call this persona? (short)</label>
+      <input type="text" id="cpLabel" maxlength="24" placeholder="e.g., Night-shift nurse">
+    </div>
+    <div class="fill">
+      <label>Your life in a sentence or two</label>
+      <textarea id="cpDesc" maxlength="200" placeholder="e.g., I'm a nurse on night shifts with two kids; always short on time, writing to schools, landlords, and the hospital admin."></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn small" onclick="saveCustomPersona()">Save my persona</button>
+      <button class="btn ghost small" onclick="closeCustomModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -627,6 +648,7 @@ var store = {
 var CHECKOUT_URL = '';   /* paste your Lemon Squeezy product link here when the store is live */
 var memberToken = store.get('memberToken', null);
 var personaId = store.get('persona', null);
+var customPersona = store.get('customPersona', null);   /* {label, desc} */
 var mission = null;
 var currentDraft = '';
 var answers = {};
@@ -665,7 +687,32 @@ function closeOnboard(id){
   if(mission) renderMission();
   if(id){toast('Got it, everything is now written for a '+personaFor(id).short.toLowerCase()+'. Switch anytime.');}
 }
-function personaFor(id){for(var i=0;i<PERSONAS.length;i++){if(PERSONAS[i].id===id)return PERSONAS[i];}return PERSONAS[0];}
+function personaFor(id){
+  if(id === 'custom' && customPersona){ return {id:'custom', name:'✨ ' + customPersona.label, short: customPersona.label}; }
+  for(var i=0;i<PERSONAS.length;i++){ if(PERSONAS[i].id===id) return PERSONAS[i]; }
+  return PERSONAS[0];
+}
+function openCustomModal(){
+  if(customPersona){
+    document.getElementById('cpLabel').value = customPersona.label;
+    document.getElementById('cpDesc').value = customPersona.desc;
+  }
+  document.getElementById('customModal').classList.add('on');
+}
+function closeCustomModal(){ document.getElementById('customModal').classList.remove('on'); }
+function saveCustomPersona(){
+  var label = document.getElementById('cpLabel').value.trim();
+  var desc = document.getElementById('cpDesc').value.trim();
+  if(!label || !desc){ toast('Both boxes matter: a short name, and your life in a sentence.'); return; }
+  customPersona = { label: label.slice(0,24), desc: desc.slice(0,200) };
+  store.set('customPersona', customPersona);
+  personaId = 'custom';
+  store.set('persona', 'custom');
+  closeCustomModal();
+  if(mission) renderMission();
+  toast('✨ Saved. Every draft is now written for: ' + customPersona.label);
+  beacon('signup', 'custom_persona');
+}
 
 /* ---------- mission ---------- */
 async function loadMission(id){
@@ -682,8 +729,9 @@ async function loadMission(id){
   }
 }
 function contentFor(){
+  var want = (personaId === 'custom') ? 'office' : personaId;
   var c = null;
-  (mission.personas||[]).forEach(function(p){ if(p.persona===personaId) c=p; });
+  (mission.personas||[]).forEach(function(p){ if(p.persona===want) c=p; });
   return c || mission.personas[0];
 }
 function renderMission(){
@@ -715,7 +763,21 @@ function renderMission(){
     b.onclick = function(){personaId=p.id; store.set('persona', p.id); renderMission();};
     row.appendChild(b);
   });
-  document.getElementById('personaLabel').textContent = personaFor(personaId).short;
+  if(customPersona){
+    var cb = document.createElement('button');
+    cb.className = 'persona' + (personaId==='custom'?' sel':'');
+    cb.textContent = '✨ ' + customPersona.label;
+    cb.onclick = function(){ personaId='custom'; store.set('persona','custom'); renderMission(); };
+    row.appendChild(cb);
+  }
+  var mk = document.createElement('button');
+  mk.className = 'persona';
+  mk.style.borderStyle = 'dashed';
+  mk.textContent = customPersona ? '✏️ Edit mine' : '＋ Make my own';
+  mk.onclick = openCustomModal;
+  row.appendChild(mk);
+  var pn = personaFor(personaId).short;
+  document.getElementById('personaLabel').textContent = personaId==='custom' ? pn + ' (your persona: examples are standard, but every draft is written for your life)' : pn;
   document.getElementById('storyTitle').textContent = c.story_title;
   document.getElementById('storyBody').textContent = c.story;
   document.getElementById('whyText').textContent = c.why;
@@ -789,7 +851,8 @@ async function generate(refine){
   out.className = 'genout show';
   out.textContent = refine ? '⏳ Refining…' : '⏳ Writing your draft…';
   try{
-    var body = {missionId: mission.id, persona: personaId, answers: answers};
+    var body = {missionId: mission.id, persona: (personaId==='custom' ? 'office' : personaId), answers: answers};
+    if(personaId==='custom' && customPersona){ body.customPersona = customPersona.desc; }
     if(refine && currentDraft){ body.refine = refine; body.draft = currentDraft; }
     var res = await fetch('/api/generate', {method:'POST', headers: memberHeaders({'content-type':'application/json'}), body: JSON.stringify(body)});
     var data = await res.json();
@@ -1128,7 +1191,7 @@ function addLearnBox(promptText){
   div.className = 'learnbox';
   var title = document.createElement('div');
   title.className = 'lb-title';
-  title.textContent = '📚 Next time, one prompt does it, save this';
+  title.textContent = '📚 Your upgraded prompt: works in ChatGPT, Claude, Gemini, anywhere';
   var pre = document.createElement('pre');
   pre.textContent = promptText;
   var btn = document.createElement('button');
@@ -1152,7 +1215,7 @@ async function helperSend(){
   var typing = addMsg('ai typing', 'thinking…');
   try{
     var res = await fetch('/api/helper', {method:'POST', headers: memberHeaders({'content-type':'application/json'}),
-      body: JSON.stringify({messages: helperMsgs, persona: personaFor(personaId).short})});
+      body: JSON.stringify({messages: helperMsgs, persona: (personaId==='custom' && customPersona) ? customPersona.label + ': ' + customPersona.desc : personaFor(personaId).short})});
     var data = await res.json();
     typing.remove();
     if(res.ok && data.reply){

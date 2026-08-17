@@ -128,7 +128,7 @@ app.post('/api/generate', async (c) => {
     return c.json({ error: 'cap', message: `You've used today's ${cap} free drafts. Members generate without limits, or copy the prompt into any AI chat, free forever.` }, 429);
   }
 
-  const { missionId, persona, answers, refine, draft } = await c.req.json().catch(() => ({}));
+  const { missionId, persona, answers, refine, draft, customPersona } = await c.req.json().catch(() => ({}));
   if (!missionId || !persona) return c.json({ error: 'bad_request' }, 400);
   // Archive access: free users generate on today's mission; members on any mission.
   if (!member) {
@@ -149,8 +149,11 @@ app.post('/api/generate', async (c) => {
     filled = filled.split(`[${placeholder}]`).join(String(value).slice(0, 300));
   }
 
-  const SYSTEM =
+  let SYSTEM =
     'You help non-technical people finish small real-life tasks. Reply with ONLY the finished draft/script/plan the user asked for, warm, plain language, no preamble, no explanations, no markdown headers. If key details are missing, make reasonable neutral choices and mark them [like this] so the user can adjust.';
+  if (customPersona) {
+    SYSTEM += ' The user describes themselves as: "' + String(customPersona).slice(0, 200) + '". Quietly tailor the tone, wording, and any examples to fit that life. Never mention that you are doing this.';
+  }
 
   // Refine mode: revise the previous draft instead of starting over.
   const userMessage = refine && draft
@@ -222,7 +225,7 @@ const HELPER_SYSTEM = `You are the helper on The Five-Minute Win, a site that he
 Your method:
 1. If the user's request is missing details you genuinely need, ask ONE short, friendly clarifying question at a time, at most 3 questions in the whole conversation. Never ask for details you don't need.
 2. Then deliver the finished result: the draft, script, or plan itself, warm, plain language, no jargon, no preamble, no markdown headers.
-3. Immediately after delivering the final result, add a line containing exactly ---LEARN--- and then a single reusable prompt the user could paste into any AI chat next time to get this kind of result in one go. Write it as a complete, ready-to-paste prompt of one to three sentences (never a fragment), with [brackets] for the parts that would change. Nothing after the reusable prompt.
+3. EVERY time you deliver a result (a draft, script, plan, or explanation), including in your very first reply if no clarification was needed, immediately add a line containing exactly ---LEARN--- and then a single upgraded prompt the user could paste into ChatGPT, Claude, Gemini, or any AI tool to get this kind of result in one go. Write it as a complete, ready-to-paste prompt of one to three sentences (never a fragment), incorporating the details the user gave you, with [brackets] only for parts that would change next time. Never add the LEARN section after a clarifying question, only with delivered results. Nothing comes after the upgraded prompt.
 
 Rules:
 - Stay in scope: small personal real-life tasks only. If asked for essays, homework, code, professional medical/legal/financial advice, or anything harmful, decline in one kind sentence and suggest something you CAN help with. For medical/legal/financial documents you may explain in plain language and help draft questions for the professional, but say clearly that the professional's advice is what counts.
@@ -253,7 +256,7 @@ app.post('/api/helper', async (c) => {
   }));
 
   let system = HELPER_SYSTEM;
-  if (persona) system += `\n\nThe user has described themselves as: ${String(persona).slice(0, 30)}. Let that quietly shape tone and examples.`;
+  if (persona) system += `\n\nThe user has described themselves as: ${String(persona).slice(0, 200)}. Let that quietly shape tone and examples.`;
 
   const text = await generateChat(c.env, system, clean, member ? 1100 : 700);
   if (text === null) return c.json({ error: 'llm_error', message: 'The helper is having a moment. Try again shortly.' }, 502);
